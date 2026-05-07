@@ -3,6 +3,7 @@ import cors from '@fastify/cors';
 import swagger from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
 import prismaPlugin from './plugins/prisma.js';
+import multipart from '@fastify/multipart';
 import vendorRoutes from './modules/vendor/vendor.routes.js';
 import userRoutes from './modules/user/user.routes.js';
 import projectTypeRoutes from './modules/projectType/projectType.routes.js';
@@ -37,6 +38,11 @@ export const buildApp = async () => {
   // 2. Register Global Plugins
   await app.register(cors);
   await app.register(prismaPlugin);
+  await app.register(multipart, {
+    limits: {
+      fileSize: 10 * 1024 * 1024, // 10MB limit
+    },
+  });
 
   // 3. Global Error Handler
   app.setErrorHandler((error: any, request, reply) => {
