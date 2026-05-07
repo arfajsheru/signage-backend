@@ -1,0 +1,355 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Vendor {
+  id              String   @id @default(uuid())
+
+  name            String
+  contact_person  String?
+  phone           String?
+  email           String?
+  address         String?
+
+  gst_number      String?
+  pan_number      String?
+
+  opening_balance Decimal  @default(0)
+
+  is_active       Boolean  @default(true)
+
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+
+  // Relations
+  users            User[]
+  projects         Project[]
+  channel_partners ChannelPartner[]
+
+  @@index([name])
+}
+
+model Role {
+  id         String   @id @default(uuid())
+
+  name       String   @unique
+
+  created_at DateTime @default(now())
+
+  // Relations
+  users User[]
+}
+
+model User {
+  id String @id @default(uuid())
+
+  // Vendor relation
+  vendor_id String
+  vendor    Vendor @relation(fields: [vendor_id], references: [id])
+
+  // Role relation
+  role_id String
+  role    Role   @relation(fields: [role_id], references: [id])
+
+  // Basic info
+  name     String
+  email    String
+  password String
+
+  phone String?
+
+  is_active Boolean @default(true)
+
+  last_login_at DateTime?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  // Relations
+  created_projects Project[] @relation("ProjectCreatedBy")
+
+  assignments ProjectAssignment[]
+
+  uploaded_files StageFile[]
+
+  approved_stages StageApproval[]
+
+  created_stages ProjectStage[]
+
+  @@unique([vendor_id, email])
+  @@index([vendor_id])
+  @@index([role_id])
+}
+
+model ChannelPartner {
+  id String @id @default(uuid())
+
+  // Vendor relation
+  vendor_id String
+  vendor    Vendor @relation(fields: [vendor_id], references: [id])
+
+  // Basic info
+  name           String
+  contact_person String?
+  phone          String?
+  email          String?
+  address        String?
+
+  // Financial info
+  gst_number      String?
+  opening_balance Decimal @default(0)
+  credit_limit    Decimal @default(0)
+
+  // Payment terms
+  payment_due_days Int?
+
+  // Additional info
+  notes String?
+
+  is_active Boolean @default(true)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  // Relations
+  projects Project[]
+
+  @@index([vendor_id])
+  @@index([name])
+}
+
+model BusinessType {
+  id String @id @default(uuid())
+
+  // Example:
+  // PRINT
+  // SIGNAGE
+
+  name String @unique
+
+  created_at DateTime @default(now())
+
+  // Relations
+  workflows ProjectWorkflow[]
+
+  projects Project[]
+}
+
+model StageTypeMaster {
+  id String @id @default(uuid())
+
+  // Example:
+  // 1 = CREATED
+  // 2 = DESIGNING
+
+  stage_type Int    @unique
+  name       String @unique
+
+  created_at DateTime @default(now())
+
+  // Relations
+  workflows ProjectWorkflow[]
+
+  project_stages ProjectStage[]
+}
+
+model Project {
+  id String @id @default(uuid())
+
+  // Vendor relation
+  vendor_id String
+  vendor    Vendor @relation(fields: [vendor_id], references: [id])
+
+  // Business type relation
+  business_type_id String
+  business_type    BusinessType @relation(fields: [business_type_id], references: [id])
+
+  // Channel partner relation (null = direct project, set = referred project)
+  channel_partner_id String?
+  channel_partner    ChannelPartner? @relation(fields: [channel_partner_id], references: [id])
+
+  // Basic project info
+  name        String
+  description String?
+
+  // Project status
+  status ProjectStatus @default(CREATED)
+
+  // Financial info
+  total_amount  Decimal?
+  advance_paid  Decimal  @default(0)
+
+  deadline DateTime?
+
+  // Created by
+  is_active  Boolean  @default(true)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  // Relations
+  assignments ProjectAssignment[]
+
+  stages ProjectStage[]
+
+  @@index([vendor_id])
+  @@index([business_type_id])
+  @@index([channel_partner_id])
+  @@index([created_by])
+}
+
+model ProjectAssignment {
+  id String @id @default(uuid())
+
+  // Project relation
+  project_id String
+  project    Project @relation(fields: [project_id], references: [id])
+
+  // User relation
+  user_id String
+  user    User   @relation(fields: [user_id], references: [id])
+
+  assigned_at DateTime @default(now())
+
+  @@unique([project_id, user_id])
+  @@index([user_id])
+}
+
+model ProjectWorkflow {
+  id String @id @default(uuid())
+
+  // Business type relation
+  business_type_id String
+  business_type    BusinessType @relation(fields: [business_type_id], references: [id])
+
+  // Stage relation
+  stage_id String
+  stage    StageTypeMaster @relation(fields: [stage_id], references: [id])
+
+  // Stage order
+  sequence Int
+
+  created_at DateTime @default(now())
+
+  @@unique([business_type_id, sequence])
+}
+
+model ProjectStage {
+  id String @id @default(uuid())
+
+  // Project relation
+  project_id String
+  project    Project @relation(fields: [project_id], references: [id])
+
+  // Stage relation
+  stage_id String
+  stage    StageTypeMaster @relation(fields: [stage_id], references: [id])
+
+  // Stage status
+  status StageStatus
+
+  started_at   DateTime?
+  completed_at DateTime?
+
+  remarks String?
+
+  // Created by
+  created_by   String
+  created_user User   @relation(fields: [created_by], references: [id])
+
+  created_at DateTime @default(now())
+
+  // Relations
+  files StageFile[]
+
+  approvals StageApproval[]
+
+  @@index([project_id])
+}
+
+model DocumentType {
+  id String @id @default(uuid())
+
+  // Example:
+  // 1 = DESIGN
+  // 2 = CUTTING
+
+  document_type Int    @unique
+  name          String @unique
+
+  created_at DateTime @default(now())
+
+  // Relations
+  files StageFile[]
+}
+
+model StageFile {
+  id String @id @default(uuid())
+
+  // Project stage relation
+  project_stage_id String
+  project_stage    ProjectStage @relation(fields: [project_stage_id], references: [id])
+
+  // File URL
+  file_url String
+
+  // Document type relation
+  document_type_id String
+  document_type    DocumentType @relation(fields: [document_type_id], references: [id])
+
+  // Uploaded by
+  uploaded_by   String
+  uploaded_user User   @relation(fields: [uploaded_by], references: [id])
+
+  created_at DateTime @default(now())
+
+  @@index([project_stage_id])
+  @@index([document_type_id])
+}
+
+model StageApproval {
+  id String @id @default(uuid())
+
+  // Project stage relation
+  project_stage_id String
+  project_stage    ProjectStage @relation(fields: [project_stage_id], references: [id])
+
+  // Approval status
+  approval_status ApprovalStatus
+
+  remarks String?
+
+  // Approved by
+  approved_by   String?
+  approved_user User?   @relation(fields: [approved_by], references: [id])
+
+  approved_at DateTime?
+
+  created_at DateTime @default(now())
+}
+
+enum ProjectStatus {
+  CREATED
+  ACTIVE
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  ON_HOLD
+}
+
+enum StageStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  REJECTED
+}
+
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
