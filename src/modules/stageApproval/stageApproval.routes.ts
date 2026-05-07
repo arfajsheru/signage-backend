@@ -6,7 +6,8 @@ import {
   createStageApprovalSchema, 
   updateStageApprovalSchema, 
   rejectStageApprovalSchema,
-  stageApprovalQuerySchema 
+  stageApprovalQuerySchema,
+  projectStageParamsSchema
 } from './stageApproval.schema.js';
 
 export default async function stageApprovalRoutes(fastify: FastifyInstance) {
@@ -29,6 +30,6 @@ export default async function stageApprovalRoutes(fastify: FastifyInstance) {
   });
 
   // Project Stage specific routes
-  fastify.get('/project-stages/:projectStageId/approvals', { preHandler: authenticate }, controller.getByStage);
-  fastify.get('/project-stages/:projectStageId/approval-timeline', { preHandler: authenticate }, controller.getTimeline);
+  fastify.get('/project-stages/:projectStageId/approvals', { preHandler: authenticate, schema: projectStageParamsSchema }, controller.getByStage);
+  fastify.get('/project-stages/:projectStageId/approval-timeline', { preHandler: authenticate, schema: projectStageParamsSchema }, controller.getTimeline);
 }

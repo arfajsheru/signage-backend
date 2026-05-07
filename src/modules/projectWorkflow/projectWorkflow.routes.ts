@@ -6,7 +6,8 @@ import {
   createProjectWorkflowSchema, 
   updateProjectWorkflowSchema, 
   reorderWorkflowSchema,
-  projectWorkflowQuerySchema 
+  projectWorkflowQuerySchema,
+  businessTypeParamsSchema
 } from './projectWorkflow.schema.js';
 
 export default async function projectWorkflowRoutes(fastify: FastifyInstance) {
@@ -24,7 +25,7 @@ export default async function projectWorkflowRoutes(fastify: FastifyInstance) {
     protectedRoutes.patch('/:id', { schema: updateProjectWorkflowSchema }, controller.update);
     protectedRoutes.delete('/:id', controller.delete);
     
-    protectedRoutes.get('/business-type/:businessTypeId', controller.getByBusinessType);
-    protectedRoutes.get('/dropdown/:businessTypeId', controller.getDropdown);
+    protectedRoutes.get('/business-type/:businessTypeId', { schema: businessTypeParamsSchema }, controller.getByBusinessType);
+    protectedRoutes.get('/dropdown/:businessTypeId', { schema: businessTypeParamsSchema }, controller.getDropdown);
   });
 }

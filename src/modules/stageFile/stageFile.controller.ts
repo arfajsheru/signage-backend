@@ -46,13 +46,16 @@ export class StageFileController {
     return reply.send(successResponse(result, 'Stage file details retrieved successfully'));
   };
 
-  getByStage = async (request: FastifyRequest<{ Params: { projectStageId: string } }>, reply: FastifyReply) => {
-    const result = await this.service.findByStageId(request.params.projectStageId);
+  getByStage = async (request: FastifyRequest, reply: FastifyReply) => {
+    const { projectStageId } = request.params as { projectStageId: string };
+    const result = await this.service.findByStageId(projectStageId);
     return reply.send(successResponse(result, 'Project stage files retrieved successfully'));
   };
 
-  update = async (request: FastifyRequest<{ Params: { id: string }; Body: { document_type_id: string } }>, reply: FastifyReply) => {
-    const result = await this.service.update(request.params.id, request.body.document_type_id);
+  update = async (request: FastifyRequest, reply: FastifyReply) => {
+    const { id } = request.params as { id: string };
+    const { document_type_id } = request.body as { document_type_id: string };
+    const result = await this.service.update(id, document_type_id);
     return reply.send(successResponse(result, 'Stage file updated successfully'));
   };
 
@@ -73,9 +76,6 @@ export class StageFileController {
 
   download = async (request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
     const file = await this.service.findById(request.params.id);
-    // For external URLs like Cloudinary, we just redirect or send the URL
-    // To force download, we can set headers if we were serving local files, 
-    // but for Cloudinary we just provide the link.
     return reply.redirect(file.file_url);
   };
 

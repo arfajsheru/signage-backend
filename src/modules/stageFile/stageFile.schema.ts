@@ -21,3 +21,13 @@ export const stageFileQuerySchema = {
     }
   }
 };
+
+export const projectStageParamsSchema = {
+  params: {
+    type: 'object',
+    required: ['projectStageId'],
+    properties: {
+      projectStageId: { type: 'string', format: 'uuid' }
+    }
+  }
+};

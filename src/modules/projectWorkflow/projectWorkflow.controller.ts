@@ -29,13 +29,16 @@ export class ProjectWorkflowController {
     return reply.send(successResponse(result, 'Workflow stage details retrieved successfully'));
   };
 
-  getByBusinessType = async (request: FastifyRequest<{ Params: { businessTypeId: string } }>, reply: FastifyReply) => {
-    const result = await this.service.getByBusinessType(request.params.businessTypeId);
+  getByBusinessType = async (request: FastifyRequest, reply: FastifyReply) => {
+    const { businessTypeId } = request.params as { businessTypeId: string };
+    const result = await this.service.getByBusinessType(businessTypeId);
     return reply.send(successResponse(result, 'Business type workflow retrieved successfully'));
   };
 
-  update = async (request: FastifyRequest<{ Params: { id: string }; Body: UpdateProjectWorkflowInput }>, reply: FastifyReply) => {
-    const result = await this.service.update(request.params.id, request.body);
+  update = async (request: FastifyRequest, reply: FastifyReply) => {
+    const { id } = request.params as { id: string };
+    const body = request.body as UpdateProjectWorkflowInput;
+    const result = await this.service.update(id, body);
     return reply.send(successResponse(result, 'Workflow stage updated successfully'));
   };
 
@@ -49,8 +52,9 @@ export class ProjectWorkflowController {
     return reply.send(successResponse(null, 'Workflow stage deleted successfully'));
   };
 
-  getDropdown = async (request: FastifyRequest<{ Params: { businessTypeId: string } }>, reply: FastifyReply) => {
-    const result = await this.service.getDropdown(request.params.businessTypeId);
+  getDropdown = async (request: FastifyRequest, reply: FastifyReply) => {
+    const { businessTypeId } = request.params as { businessTypeId: string };
+    const result = await this.service.getDropdown(businessTypeId);
     return reply.send(successResponse(result, 'Workflow dropdown retrieved successfully'));
   };
 }

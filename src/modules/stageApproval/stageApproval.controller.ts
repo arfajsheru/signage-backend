@@ -25,8 +25,9 @@ export class StageApprovalController {
     return reply.send(successResponse(result, 'Stage approval details retrieved successfully'));
   };
 
-  getByStage = async (request: FastifyRequest<{ Params: { projectStageId: string } }>, reply: FastifyReply) => {
-    const result = await this.service.findByStageId(request.params.projectStageId);
+  getByStage = async (request: FastifyRequest, reply: FastifyReply) => {
+    const { projectStageId } = request.params as { projectStageId: string };
+    const result = await this.service.findByStageId(projectStageId);
     return reply.send(successResponse(result, 'Project stage approvals retrieved successfully'));
   };
 
@@ -36,15 +37,19 @@ export class StageApprovalController {
     return reply.send(successResponse(result, 'Stage approved successfully'));
   };
 
-  reject = async (request: FastifyRequest<{ Params: { id: string }; Body: { remarks: string } }>, reply: FastifyReply) => {
+  reject = async (request: FastifyRequest, reply: FastifyReply) => {
+    const { id } = request.params as { id: string };
+    const { remarks } = request.body as { remarks: string };
     const userId = request.user!.id;
-    const result = await this.service.reject(request.params.id, userId, request.body.remarks);
+    const result = await this.service.reject(id, userId, remarks);
     return reply.send(successResponse(result, 'Stage rejected successfully'));
   };
 
-  update = async (request: FastifyRequest<{ Params: { id: string }; Body: UpdateStageApprovalInput }>, reply: FastifyReply) => {
+  update = async (request: FastifyRequest, reply: FastifyReply) => {
+    const { id } = request.params as { id: string };
+    const body = request.body as UpdateStageApprovalInput;
     const userId = request.user!.id;
-    const result = await this.service.update(request.params.id, userId, request.body);
+    const result = await this.service.update(id, userId, body);
     return reply.send(successResponse(result, 'Stage approval updated successfully'));
   };
 
@@ -53,8 +58,9 @@ export class StageApprovalController {
     return reply.send(successResponse(null, 'Stage approval deleted successfully'));
   };
 
-  getTimeline = async (request: FastifyRequest<{ Params: { projectStageId: string } }>, reply: FastifyReply) => {
-    const result = await this.service.getTimeline(request.params.projectStageId);
+  getTimeline = async (request: FastifyRequest, reply: FastifyReply) => {
+    const { projectStageId } = request.params as { projectStageId: string };
+    const result = await this.service.getTimeline(projectStageId);
     return reply.send(successResponse(result, 'Stage approval timeline retrieved successfully'));
   };
 

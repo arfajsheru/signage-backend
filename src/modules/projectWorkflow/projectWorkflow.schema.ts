@@ -45,3 +45,13 @@ export const projectWorkflowQuerySchema = {
     }
   }
 };
+
+export const businessTypeParamsSchema = {
+  params: {
+    type: 'object',
+    required: ['businessTypeId'],
+    properties: {
+      businessTypeId: { type: 'string', format: 'uuid' }
+    }
+  }
+};
