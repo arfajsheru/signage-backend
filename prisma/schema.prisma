@@ -186,6 +186,9 @@ model Project {
   deadline DateTime?
 
   // Created by
+  created_by      String
+  created_by_user User   @relation("ProjectCreatedBy", fields: [created_by], references: [id])
+
   is_active  Boolean  @default(true)
 
   created_at DateTime @default(now())
