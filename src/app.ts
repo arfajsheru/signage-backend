@@ -12,6 +12,8 @@ import projectAssignmentRoutes from './modules/projectAssignment/projectAssignme
 import stageTypeMasterRoutes from './modules/stageTypeMaster/stageTypeMaster.routes.js';
 import projectWorkflowRoutes from './modules/projectWorkflow/projectWorkflow.routes.js';
 import documentTypeRoutes from './modules/documentType/documentType.routes.js';
+import stageFileRoutes from './modules/stageFile/stageFile.routes.js';
+import stageApprovalRoutes from './modules/stageApproval/stageApproval.routes.js';
 import { errorResponse } from './utils/response.js';
 import { AppError } from './utils/errors.js';
 
@@ -70,6 +72,8 @@ export const buildApp = async () => {
   await app.register(stageTypeMasterRoutes, { prefix: '/stage-types' });
   await app.register(projectWorkflowRoutes, { prefix: '/project-workflows' });
   await app.register(documentTypeRoutes, { prefix: '/document-types' });
+  await app.register(stageFileRoutes, { prefix: '/stage-files' });
+  await app.register(stageApprovalRoutes, { prefix: '/stage-approvals' });
 
   app.get('/health', async () => {
     return { status: 'OK', timestamp: new Date().toISOString() };

@@ -297,8 +297,9 @@ model StageFile {
   project_stage_id String
   project_stage    ProjectStage @relation(fields: [project_stage_id], references: [id])
 
-  // File URL
-  file_url String
+  // File URL and Storage Info
+  file_url  String
+  public_id String?
 
   // Document type relation
   document_type_id String
