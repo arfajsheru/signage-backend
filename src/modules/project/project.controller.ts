@@ -30,6 +30,12 @@ export class ProjectController {
     return reply.send(successResponse(result, 'Project details retrieved successfully'));
   };
 
+  getFullDetails = async (request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
+    const vendorId = request.user!.vendor_id;
+    const result = await this.service.getFullDetails(vendorId, request.params.id);
+    return reply.send(successResponse(result, 'Full project details retrieved successfully'));
+  };
+
   update = async (request: FastifyRequest<{ Params: { id: string }; Body: UpdateProjectInput }>, reply: FastifyReply) => {
     const vendorId = request.user!.vendor_id;
     const result = await this.service.update(vendorId, request.params.id, request.body);
@@ -44,7 +50,20 @@ export class ProjectController {
 
   delete = async (request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
     const vendorId = request.user!.vendor_id;
-    await this.service.delete(vendorId, request.params.id);
+    await this.service.softDelete(vendorId, request.params.id);
     return reply.send(successResponse(null, 'Project deleted successfully'));
+  };
+
+  search = async (request: FastifyRequest<{ Querystring: { q: string } }>, reply: FastifyReply) => {
+    const vendorId = request.user!.vendor_id;
+    const query = request.query.q || '';
+    const result = await this.service.search(vendorId, query);
+    return reply.send(successResponse(result, 'Project search results retrieved'));
+  };
+
+  getStats = async (request: FastifyRequest, reply: FastifyReply) => {
+    const vendorId = request.user!.vendor_id;
+    const result = await this.service.getStats(vendorId);
+    return reply.send(successResponse(result, 'Project statistics retrieved successfully'));
   };
 }

@@ -8,6 +8,8 @@ import userRoutes from './modules/user/user.routes.js';
 import projectTypeRoutes from './modules/projectType/projectType.routes.js';
 import projectRoutes from './modules/project/project.routes.js';
 import projectAssignmentRoutes from './modules/projectAssignment/projectAssignment.routes.js';
+import stageTypeMasterRoutes from './modules/stageTypeMaster/stageTypeMaster.routes.js';
+import projectWorkflowRoutes from './modules/projectWorkflow/projectWorkflow.routes.js';
 import { errorResponse } from './utils/response.js';
 import { AppError } from './utils/errors.js';
 
@@ -58,6 +60,8 @@ export const buildApp = async () => {
   await app.register(projectTypeRoutes, { prefix: '/project-types' });
   await app.register(projectRoutes, { prefix: '/projects' });
   await app.register(projectAssignmentRoutes, { prefix: '/project-assignments' });
+  await app.register(stageTypeMasterRoutes, { prefix: '/stage-types' });
+  await app.register(projectWorkflowRoutes, { prefix: '/project-workflows' });
 
   app.get('/health', async () => {
     return { status: 'OK', timestamp: new Date().toISOString() };
