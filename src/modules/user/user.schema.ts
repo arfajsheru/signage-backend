@@ -16,11 +16,10 @@ export const createUserSchema = {
 export const loginSchema = {
   body: {
     type: 'object',
-    required: ['identifier', 'password', 'vendor_id'],
+    required: ['identifier', 'password'],
     properties: {
       identifier: { type: 'string', minLength: 3 },
-      password: { type: 'string' },
-      vendor_id: { type: 'string', format: 'uuid' }
+      password: { type: 'string' }
     }
   }
 };

@@ -1,0 +1,154 @@
+{
+	"info": {
+		"_postman_id": "final-ultimate-collection-id-123",
+		"name": "Signage ERP - Ultimate Collection v2",
+		"description": "Final complete collection with all modules including the new Roles APIs.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Authentication",
+			"item": [
+				{
+					"name": "User Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"vendor_id\": \"7c9e6639-74b0-4054-8025-8848f060d4e9\",\n    \"identifier\": \"admin@unitedgraphics.com\",\n    \"password\": \"password123\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": { "raw": "{{baseUrl}}/users/login" }
+					}
+				},
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"vendor_id\": \"<vendor_uuid>\",\n    \"role_id\": \"<role_uuid>\",\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"password\": \"password123\",\n    \"phone\": \"9876543210\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": { "raw": "{{baseUrl}}/users/register" }
+					}
+				}
+			]
+		},
+		{
+			"name": "2. Vendors",
+			"item": [
+				{
+					"name": "Create Vendor",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"United Graphics\",\n    \"contact_person\": \"Arfaj Sheru\",\n    \"phone\": \"9876543210\",\n    \"email\": \"info@unitedgraphics.com\",\n    \"address\": \"Mumbai, Maharashtra\",\n    \"gst_number\": \"27AAACU1234A1Z5\",\n    \"pan_number\": \"AAACU1234A\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": { "raw": "{{baseUrl}}/vendors" }
+					}
+				},
+				{
+					"name": "Get All Vendors",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
+						"url": { "raw": "{{baseUrl}}/vendors" }
+					}
+				}
+			]
+		},
+		{
+			"name": "3. Masters (Roles & Types)",
+			"item": [
+				{
+					"name": "Roles",
+					"item": [
+						{
+							"name": "Create Role",
+							"request": {
+								"method": "POST",
+								"header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"ADMIN\"\n}",
+									"options": { "raw": { "language": "json" } }
+								},
+								"url": { "raw": "{{baseUrl}}/roles" }
+							}
+						},
+						{
+							"name": "Get All Roles",
+							"request": {
+								"method": "GET",
+								"header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
+								"url": { "raw": "{{baseUrl}}/roles" }
+							}
+						}
+					]
+				},
+				{
+					"name": "Business Types",
+					"item": [
+						{
+							"name": "Get All Types",
+							"request": {
+								"method": "GET",
+								"header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
+								"url": { "raw": "{{baseUrl}}/project-types" }
+							}
+						},
+						{
+							"name": "Create Type",
+							"request": {
+								"method": "POST",
+								"header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"SIGNAGE\"\n}",
+									"options": { "raw": { "language": "json" } }
+								},
+								"url": { "raw": "{{baseUrl}}/project-types" }
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "4. Projects",
+			"item": [
+				{
+					"name": "Create Project",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Lollipop Signage\",\n    \"description\": \"Outdoor LED signage\",\n    \"business_type_id\": \"<uuid_from_project_types>\",\n    \"total_amount\": 15000,\n    \"advance_paid\": 5000,\n    \"deadline\": \"2024-12-30T00:00:00Z\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": { "raw": "{{baseUrl}}/projects" }
+					}
+				},
+				{
+					"name": "Get Project Full Details",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
+						"url": { "raw": "{{baseUrl}}/projects/:id/full-details" }
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{ "key": "baseUrl", "value": "http://localhost:5001" },
+		{ "key": "token", "value": "" }
+	]
+}

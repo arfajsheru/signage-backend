@@ -18,7 +18,6 @@ export interface UpdateUserInput {
 export interface LoginInput {
   identifier: string; // Can be email or phone
   password: string;
-  vendor_id: string; // Required because identifier is unique per vendor
 }
 
 export interface UserQueryFilters {

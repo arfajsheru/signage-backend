@@ -14,6 +14,7 @@ import projectWorkflowRoutes from './modules/projectWorkflow/projectWorkflow.rou
 import documentTypeRoutes from './modules/documentType/documentType.routes.js';
 import stageFileRoutes from './modules/stageFile/stageFile.routes.js';
 import stageApprovalRoutes from './modules/stageApproval/stageApproval.routes.js';
+import roleRoutes from './modules/role/role.routes.js';
 import { errorResponse } from './utils/response.js';
 import { AppError } from './utils/errors.js';
 
@@ -74,6 +75,7 @@ export const buildApp = async () => {
   await app.register(documentTypeRoutes, { prefix: '/document-types' });
   await app.register(stageFileRoutes, { prefix: '/stage-files' });
   await app.register(stageApprovalRoutes, { prefix: '/stage-approvals' });
+  await app.register(roleRoutes, { prefix: '/roles' });
 
   app.get('/health', async () => {
     return { status: 'OK', timestamp: new Date().toISOString() };

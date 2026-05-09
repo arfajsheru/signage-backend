@@ -51,12 +51,11 @@ export class UserService {
    * User Login
    */
   async login(data: LoginInput) {
-    const { identifier, password, vendor_id } = data;
+    const { identifier, password } = data;
     const lowerIdentifier = identifier.toLowerCase();
 
     const user = await this.prisma.user.findFirst({
       where: { 
-        vendor_id: vendor_id,
         is_active: true,
         OR: [
           { email: lowerIdentifier },
@@ -65,9 +64,7 @@ export class UserService {
       },
       include: {
         role: true,
-        vendor: {
-          select: { name: true }
-        }
+        vendor: true
       }
     });
 
@@ -75,7 +72,7 @@ export class UserService {
       throw new UnauthorizedError('Invalid credentials or account inactive');
     }
 
-    const isMatch = await comparePassword(data.password, user.password);
+    const isMatch = await comparePassword(password, user.password);
     if (!isMatch) {
       throw new UnauthorizedError('Invalid credentials');
     }
@@ -95,11 +92,13 @@ export class UserService {
 
     return {
       user: {
-        id: user.id,
+        user_id: user.id,
+        vendor_id: user.vendor_id,
         name: user.name,
         email: user.email,
-        role: user.role.name,
-        vendor: user.vendor.name
+        phone: user.phone,
+        user_type: user.role.name,
+        vendor_name: user.vendor.name
       },
       token
     };
