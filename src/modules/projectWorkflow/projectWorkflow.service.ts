@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { 
   CreateProjectWorkflowInput, 
+  BulkCreateProjectWorkflowInput,
   UpdateProjectWorkflowInput, 
   ProjectWorkflowQueryFilters,
   ReorderWorkflowItem
@@ -10,37 +11,81 @@ import { NotFoundError, ValidationError } from '../../utils/errors.js';
 export class ProjectWorkflowService {
   constructor(private prisma: PrismaClient) {}
 
-  async create(data: CreateProjectWorkflowInput) {
+  async create(data: CreateProjectWorkflowInput | BulkCreateProjectWorkflowInput) {
+    const businessTypeId = data.business_type_id;
+
     // 1. Validate Business Type exists
     const businessType = await this.prisma.businessType.findUnique({
-      where: { id: data.business_type_id }
+      where: { id: businessTypeId }
     });
     if (!businessType) throw new ValidationError('Invalid business type');
 
+    // Handle Bulk
+    if ('stages' in data) {
+      const { stages } = data;
+
+      // Validate all stages exist
+      const stageIds = stages.map(s => s.stage_id);
+      const existingStages = await this.prisma.stageTypeMaster.findMany({
+        where: { id: { in: stageIds } }
+      });
+
+      if (existingStages.length !== Array.from(new Set(stageIds)).length) {
+        throw new ValidationError('One or more invalid stage types provided');
+      }
+
+      // Create in transaction
+      return this.prisma.$transaction(async (tx) => {
+        const results = [];
+        for (const stageData of stages) {
+          const created = await tx.projectWorkflow.create({
+            data: {
+              business_type_id: businessTypeId,
+              stage_id: stageData.stage_id,
+              sequence: stageData.sequence
+            },
+            include: { stage: true }
+          });
+          results.push(created);
+        }
+        return results;
+      });
+    }
+
+    // Handle Single
+    const { stage_id, sequence } = data;
+    
     // 2. Validate Stage exists
     const stage = await this.prisma.stageTypeMaster.findUnique({
-      where: { id: data.stage_id }
+      where: { id: stage_id }
     });
     if (!stage) throw new ValidationError('Invalid stage type');
 
     // 3. Check for duplicates (sequence or stage) in same business type
     const existing = await this.prisma.projectWorkflow.findFirst({
       where: {
-        business_type_id: data.business_type_id,
+        business_type_id: businessTypeId,
         OR: [
-          { sequence: data.sequence },
-          { stage_id: data.stage_id }
+          { stage_id: stage_id },
+          { sequence: sequence }
         ]
       }
     });
 
     if (existing) {
-      if (existing.sequence === data.sequence) throw new ValidationError('Sequence already exists for this business type');
-      if (existing.stage_id === data.stage_id) throw new ValidationError('Stage already added to this business type workflow');
+      throw new ValidationError(
+        existing.sequence === sequence 
+          ? 'Sequence already exists for this business type' 
+          : 'Stage already exists for this business type'
+      );
     }
 
     return this.prisma.projectWorkflow.create({
-      data,
+      data: {
+        business_type_id: businessTypeId,
+        stage_id: stage_id,
+        sequence: sequence
+      },
       include: {
         business_type: true,
         stage: true
@@ -73,7 +118,7 @@ export class ProjectWorkflowService {
     return { workflows, total, page, limit };
   }
 
-  async findById(id: string) {
+  async findById(id: number) {
     const workflow = await this.prisma.projectWorkflow.findUnique({
       where: { id },
       include: {
@@ -85,7 +130,7 @@ export class ProjectWorkflowService {
     return workflow;
   }
 
-  async getByBusinessType(businessTypeId: string) {
+  async getByBusinessType(businessTypeId: number) {
     return this.prisma.projectWorkflow.findMany({
       where: { business_type_id: businessTypeId },
       include: {
@@ -95,7 +140,7 @@ export class ProjectWorkflowService {
     });
   }
 
-  async update(id: string, data: UpdateProjectWorkflowInput) {
+  async update(id: number, data: UpdateProjectWorkflowInput) {
     const current = await this.findById(id);
 
     const updateData: any = {};
@@ -159,7 +204,7 @@ export class ProjectWorkflowService {
     );
   }
 
-  async delete(id: string) {
+  async delete(id: number) {
     const workflow = await this.prisma.projectWorkflow.findUnique({
       where: { id }
     });
@@ -187,7 +232,7 @@ export class ProjectWorkflowService {
     });
   }
 
-  async getDropdown(businessTypeId: string) {
+  async getDropdown(businessTypeId: number) {
     const workflows = await this.prisma.projectWorkflow.findMany({
       where: { business_type_id: businessTypeId },
       include: {

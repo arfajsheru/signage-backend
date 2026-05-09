@@ -90,7 +90,7 @@ export class VendorService {
   /**
    * Get single vendor details
    */
-  async findById(id: string) {
+  async findById(id: number) {
     const vendor = await this.prisma.vendor.findUnique({
       where: { id },
       include: {
@@ -107,7 +107,7 @@ export class VendorService {
   /**
    * Update vendor details
    */
-  async update(id: string, data: UpdateVendorInput) {
+  async update(id: number, data: UpdateVendorInput) {
     await this.findById(id);
 
     return this.prisma.vendor.update({
@@ -123,7 +123,7 @@ export class VendorService {
   /**
    * Soft delete vendor
    */
-  async delete(id: string) {
+  async delete(id: number) {
     await this.findById(id);
     return this.prisma.vendor.update({
       where: { id },

@@ -5,8 +5,8 @@ export const createProjectSchema = {
     properties: {
       name: { type: 'string', minLength: 3, maxLength: 100 },
       description: { type: 'string' },
-      business_type_id: { type: 'string', format: 'uuid' },
-      channel_partner_id: { type: 'string', format: 'uuid' },
+      business_type_id: { type: 'integer' },
+      channel_partner_id: { type: 'integer' },
       total_amount: { type: 'number', minimum: 0 },
       advance_paid: { type: 'number', minimum: 0 },
       deadline: { type: 'string', format: 'date-time' }
@@ -20,8 +20,8 @@ export const updateProjectSchema = {
     properties: {
       name: { type: 'string', minLength: 3, maxLength: 100 },
       description: { type: 'string' },
-      business_type_id: { type: 'string', format: 'uuid' },
-      channel_partner_id: { type: 'string', format: 'uuid' },
+      business_type_id: { type: 'integer' },
+      channel_partner_id: { type: 'integer' },
       total_amount: { type: 'number', minimum: 0 },
       advance_paid: { type: 'number', minimum: 0 },
       deadline: { type: 'string', format: 'date-time' },
@@ -47,10 +47,10 @@ export const projectQuerySchema = {
       page: { type: 'string', default: '1' },
       limit: { type: 'string', default: '10' },
       search: { type: 'string' },
-      business_type_id: { type: 'string', format: 'uuid' },
-      channel_partner_id: { type: 'string', format: 'uuid' },
+      business_type_id: { type: 'integer' },
+      channel_partner_id: { type: 'integer' },
       status: { type: 'string', enum: ['CREATED', 'ACTIVE', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED', 'ON_HOLD'] },
-      created_by: { type: 'string', format: 'uuid' },
+      created_by: { type: 'integer' },
       sortBy: { type: 'string' },
       sortOrder: { type: 'string', enum: ['asc', 'desc'] }
     }

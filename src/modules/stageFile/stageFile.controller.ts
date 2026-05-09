@@ -41,31 +41,31 @@ export class StageFileController {
     );
   };
 
-  getOne = async (request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
-    const result = await this.service.findById(request.params.id);
+  getOne = async (request: FastifyRequest<{ Params: { id: number } }>, reply: FastifyReply) => {
+    const result = await this.service.findById(Number(request.params.id));
     return reply.send(successResponse(result, 'Stage file details retrieved successfully'));
   };
 
   getByStage = async (request: FastifyRequest, reply: FastifyReply) => {
-    const { projectStageId } = request.params as { projectStageId: string };
+    const { projectStageId } = request.params as { projectStageId: number };
     const result = await this.service.findByStageId(projectStageId);
     return reply.send(successResponse(result, 'Project stage files retrieved successfully'));
   };
 
   update = async (request: FastifyRequest, reply: FastifyReply) => {
-    const { id } = request.params as { id: string };
-    const { document_type_id } = request.body as { document_type_id: string };
+    const { id } = request.params as { id: number };
+    const { document_type_id } = request.body as { document_type_id: number };
     const result = await this.service.update(id, document_type_id);
     return reply.send(successResponse(result, 'Stage file updated successfully'));
   };
 
-  delete = async (request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
-    await this.service.delete(request.params.id);
+  delete = async (request: FastifyRequest<{ Params: { id: number } }>, reply: FastifyReply) => {
+    await this.service.delete(Number(request.params.id));
     return reply.send(successResponse(null, 'Stage file deleted successfully'));
   };
 
-  preview = async (request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
-    const file = await this.service.findById(request.params.id);
+  preview = async (request: FastifyRequest<{ Params: { id: number } }>, reply: FastifyReply) => {
+    const file = await this.service.findById(Number(request.params.id));
     return reply.send(successResponse({
       file_url: file.file_url,
       document_type: file.document_type,
@@ -74,8 +74,8 @@ export class StageFileController {
     }, 'File preview details retrieved'));
   };
 
-  download = async (request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
-    const file = await this.service.findById(request.params.id);
+  download = async (request: FastifyRequest<{ Params: { id: number } }>, reply: FastifyReply) => {
+    const file = await this.service.findById(Number(request.params.id));
     return reply.redirect(file.file_url);
   };
 

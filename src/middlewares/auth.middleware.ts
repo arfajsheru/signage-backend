@@ -5,9 +5,9 @@ import { UnauthorizedError } from '../utils/errors.js';
 declare module 'fastify' {
   interface FastifyRequest {
     user?: {
-      id: string;
+      id: number;
       email: string;
-      company_id: string;
+      vendor_id: number;
       [key: string]: any;
     };
   }
@@ -23,8 +23,8 @@ export const authenticate = async (request: FastifyRequest, reply: FastifyReply)
   const token = authHeader.split(' ')[1];
   const decoded = verifyToken(token);
 
-  if (!decoded || !decoded.company_id) {
-    throw new UnauthorizedError('Invalid token or missing company context');
+  if (!decoded || !decoded.vendor_id) {
+    throw new UnauthorizedError('Invalid token or missing vendor context');
   }
 
   request.user = decoded;

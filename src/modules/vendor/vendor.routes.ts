@@ -8,7 +8,7 @@ export default async function vendorRoutes(fastify: FastifyInstance) {
   const controller = new VendorController(service);
 
   // Public: Register a new business
-  fastify.post('/', controller.create);
+  fastify.post('/create-vendor', controller.create);
 
   // Protected: Manage businesses
   fastify.register(async (protectedRoutes) => {

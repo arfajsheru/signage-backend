@@ -141,7 +141,7 @@ export class UserService {
   /**
    * Get single user
    */
-  async findById(id: string) {
+  async findById(id: number) {
     const user = await this.prisma.user.findUnique({
       where: { id },
       include: { role: true, vendor: true }
@@ -154,7 +154,7 @@ export class UserService {
   /**
    * Update user
    */
-  async update(id: string, data: UpdateUserInput) {
+  async update(id: number, data: UpdateUserInput) {
     if (data.password) {
       data.password = await hashPassword(data.password);
     }

@@ -7,9 +7,9 @@ export class StageFileService {
   constructor(private prisma: PrismaClient) {}
 
   async upload(
-    userId: string,
-    projectStageId: string,
-    documentTypeId: string,
+    userId: number,
+    projectStageId: number,
+    documentTypeId: number,
     fileBuffer: Buffer,
     fileName: string,
   ) {
@@ -93,7 +93,7 @@ export class StageFileService {
     return { files, total, page, limit };
   }
 
-  async findById(id: string) {
+  async findById(id: number) {
     const file = await this.prisma.stageFile.findUnique({
       where: { id },
       include: {
@@ -106,7 +106,7 @@ export class StageFileService {
     return file;
   }
 
-  async findByStageId(projectStageId: string) {
+  async findByStageId(projectStageId: number) {
     return this.prisma.stageFile.findMany({
       where: { project_stage_id: projectStageId },
       include: {
@@ -117,7 +117,7 @@ export class StageFileService {
     });
   }
 
-  async update(id: string, documentTypeId: string) {
+  async update(id: number, documentTypeId: number) {
     const docType = await this.prisma.documentType.findUnique({
       where: { id: documentTypeId },
     });
@@ -130,7 +130,7 @@ export class StageFileService {
     });
   }
 
-  async delete(id: string) {
+  async delete(id: number) {
     const file = await this.findById(id);
 
     // 1. Delete from Storage if public_id exists

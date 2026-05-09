@@ -19,18 +19,18 @@ export class StageTypeMasterController {
     );
   };
 
-  getOne = async (request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
-    const result = await this.service.findById(request.params.id);
+  getOne = async (request: FastifyRequest<{ Params: { id: number } }>, reply: FastifyReply) => {
+    const result = await this.service.findById(Number(request.params.id));
     return reply.send(successResponse(result, 'Stage type details retrieved successfully'));
   };
 
-  update = async (request: FastifyRequest<{ Params: { id: string }; Body: UpdateStageTypeInput }>, reply: FastifyReply) => {
-    const result = await this.service.update(request.params.id, request.body);
+  update = async (request: FastifyRequest<{ Params: { id: number }; Body: UpdateStageTypeInput }>, reply: FastifyReply) => {
+    const result = await this.service.update(Number(request.params.id), request.body);
     return reply.send(successResponse(result, 'Stage type updated successfully'));
   };
 
-  delete = async (request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
-    await this.service.delete(request.params.id);
+  delete = async (request: FastifyRequest<{ Params: { id: number } }>, reply: FastifyReply) => {
+    await this.service.delete(Number(request.params.id));
     return reply.send(successResponse(null, 'Stage type deleted successfully'));
   };
 

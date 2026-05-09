@@ -1,0 +1,36 @@
+{
+  "id": "signage-env-1234",
+  "name": "Signage ERP Environment",
+  "values": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5001",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "token",
+      "value": "YOUR_JWT_TOKEN",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "vendor_id",
+      "value": "1",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "project_id",
+      "value": "1",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "user_id",
+      "value": "1",
+      "type": "default",
+      "enabled": true
+    }
+  ]
+}

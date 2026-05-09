@@ -1,12 +1,35 @@
 export const createProjectWorkflowSchema = {
   body: {
-    type: 'object',
-    required: ['business_type_id', 'stage_id', 'sequence'],
-    properties: {
-      business_type_id: { type: 'string', format: 'uuid' },
-      stage_id: { type: 'string', format: 'uuid' },
-      sequence: { type: 'integer', minimum: 1 }
-    }
+    oneOf: [
+      {
+        type: 'object',
+        required: ['business_type_id', 'stage_id', 'sequence'],
+        properties: {
+          business_type_id: { type: 'integer' },
+          stage_id: { type: 'integer' },
+          sequence: { type: 'integer', minimum: 1 }
+        }
+      },
+      {
+        type: 'object',
+        required: ['business_type_id', 'stages'],
+        properties: {
+          business_type_id: { type: 'integer' },
+          stages: {
+            type: 'array',
+            minItems: 1,
+            items: {
+              type: 'object',
+              required: ['stage_id', 'sequence'],
+              properties: {
+                stage_id: { type: 'integer' },
+                sequence: { type: 'integer', minimum: 1 }
+              }
+            }
+          }
+        }
+      }
+    ]
   }
 };
 
@@ -14,7 +37,7 @@ export const updateProjectWorkflowSchema = {
   body: {
     type: 'object',
     properties: {
-      stage_id: { type: 'string', format: 'uuid' },
+      stage_id: { type: 'integer' },
       sequence: { type: 'integer', minimum: 1 }
     }
   }
@@ -28,7 +51,7 @@ export const reorderWorkflowSchema = {
       type: 'object',
       required: ['id', 'sequence'],
       properties: {
-        id: { type: 'string', format: 'uuid' },
+        id: { type: 'integer' },
         sequence: { type: 'integer', minimum: 1 }
       }
     }
@@ -41,7 +64,7 @@ export const projectWorkflowQuerySchema = {
     properties: {
       page: { type: 'string', default: '1' },
       limit: { type: 'string', default: '10' },
-      business_type_id: { type: 'string', format: 'uuid' }
+      business_type_id: { type: 'integer' }
     }
   }
 };
@@ -51,7 +74,7 @@ export const businessTypeParamsSchema = {
     type: 'object',
     required: ['businessTypeId'],
     properties: {
-      businessTypeId: { type: 'string', format: 'uuid' }
+      businessTypeId: { type: 'integer' }
     }
   }
 };

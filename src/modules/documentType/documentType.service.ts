@@ -59,7 +59,7 @@ export class DocumentTypeService {
     return { documentTypes, total, page, limit };
   }
 
-  async findById(id: string) {
+  async findById(id: number) {
     const docType = await this.prisma.documentType.findUnique({
       where: { id }
     });
@@ -67,7 +67,7 @@ export class DocumentTypeService {
     return docType;
   }
 
-  async update(id: string, data: UpdateDocumentTypeInput) {
+  async update(id: number, data: UpdateDocumentTypeInput) {
     await this.findById(id);
 
     const updateData: any = {};
@@ -98,7 +98,7 @@ export class DocumentTypeService {
     });
   }
 
-  async delete(id: string) {
+  async delete(id: number) {
     const docType = await this.prisma.documentType.findUnique({
       where: { id },
       include: {

@@ -14,18 +14,14 @@ export default async function projectWorkflowRoutes(fastify: FastifyInstance) {
   const service = new ProjectWorkflowService(fastify.prisma);
   const controller = new ProjectWorkflowController(service);
 
-  fastify.register(async (protectedRoutes) => {
-    protectedRoutes.addHook('preHandler', authenticate);
-    
-    protectedRoutes.post('/', { schema: createProjectWorkflowSchema }, controller.create);
-    protectedRoutes.get('/', { schema: projectWorkflowQuerySchema }, controller.getAll);
-    protectedRoutes.patch('/reorder', { schema: reorderWorkflowSchema }, controller.reorder);
-    
-    protectedRoutes.get('/:id', controller.getOne);
-    protectedRoutes.patch('/:id', { schema: updateProjectWorkflowSchema }, controller.update);
-    protectedRoutes.delete('/:id', controller.delete);
-    
-    protectedRoutes.get('/business-type/:businessTypeId', { schema: businessTypeParamsSchema }, controller.getByBusinessType);
-    protectedRoutes.get('/dropdown/:businessTypeId', { schema: businessTypeParamsSchema }, controller.getDropdown);
-  });
+  fastify.post('/', { schema: createProjectWorkflowSchema }, controller.create);
+  fastify.get('/', { schema: projectWorkflowQuerySchema }, controller.getAll);
+  fastify.patch('/reorder', { schema: reorderWorkflowSchema }, controller.reorder);
+  
+  fastify.get('/:id', controller.getOne);
+  fastify.patch('/:id', { schema: updateProjectWorkflowSchema }, controller.update);
+  fastify.delete('/:id', controller.delete);
+  
+  fastify.get('/business-type/:businessTypeId', { schema: businessTypeParamsSchema }, controller.getByBusinessType);
+  fastify.get('/dropdown/:businessTypeId', { schema: businessTypeParamsSchema }, controller.getDropdown);
 }

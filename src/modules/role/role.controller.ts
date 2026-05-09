@@ -17,18 +17,18 @@ export class RoleController {
     return reply.send(successResponse(roles, 'Roles retrieved successfully', getMeta(total, page, limit)));
   };
 
-  getOne = async (request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
-    const role = await this.service.findById(request.params.id);
+  getOne = async (request: FastifyRequest<{ Params: { id: number } }>, reply: FastifyReply) => {
+    const role = await this.service.findById(Number(request.params.id));
     return reply.send(successResponse(role, 'Role details retrieved successfully'));
   };
 
-  update = async (request: FastifyRequest<{ Params: { id: string }; Body: UpdateRoleInput }>, reply: FastifyReply) => {
-    const role = await this.service.update(request.params.id, request.body);
+  update = async (request: FastifyRequest<{ Params: { id: number }; Body: UpdateRoleInput }>, reply: FastifyReply) => {
+    const role = await this.service.update(Number(request.params.id), request.body);
     return reply.send(successResponse(role, 'Role updated successfully'));
   };
 
-  delete = async (request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
-    await this.service.delete(request.params.id);
+  delete = async (request: FastifyRequest<{ Params: { id: number } }>, reply: FastifyReply) => {
+    await this.service.delete(Number(request.params.id));
     return reply.send(successResponse(null, 'Role deleted successfully'));
   };
 }

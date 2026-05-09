@@ -1,9 +1,9 @@
 export interface StageFileQueryFilters {
   page?: string;
   limit?: string;
-  project_stage_id?: string;
-  document_type_id?: string;
-  uploaded_by?: string;
+  project_stage_id?: number;
+  document_type_id?: number;
+  uploaded_by?: number;
   search?: string;
 }
 

@@ -5,7 +5,7 @@ import { NotFoundError, ValidationError } from '../../utils/errors.js';
 export class StageApprovalService {
   constructor(private prisma: PrismaClient) {}
 
-  async create(userId: string, data: CreateStageApprovalInput) {
+  async create(userId: number, data: CreateStageApprovalInput) {
     const stage = await this.prisma.projectStage.findUnique({
       where: { id: data.project_stage_id }
     });
@@ -50,7 +50,7 @@ export class StageApprovalService {
     return { approvals, total, page, limit };
   }
 
-  async findById(id: string) {
+  async findById(id: number) {
     const approval = await this.prisma.stageApproval.findUnique({
       where: { id },
       include: {
@@ -62,7 +62,7 @@ export class StageApprovalService {
     return approval;
   }
 
-  async findByStageId(projectStageId: string) {
+  async findByStageId(projectStageId: number) {
     return this.prisma.stageApproval.findMany({
       where: { project_stage_id: projectStageId },
       include: {
@@ -72,7 +72,7 @@ export class StageApprovalService {
     });
   }
 
-  async approve(id: string, userId: string) {
+  async approve(id: number, userId: number) {
     await this.findById(id);
     return this.prisma.stageApproval.update({
       where: { id },
@@ -84,7 +84,7 @@ export class StageApprovalService {
     });
   }
 
-  async reject(id: string, userId: string, remarks: string) {
+  async reject(id: number, userId: number, remarks: string) {
     await this.findById(id);
     return this.prisma.stageApproval.update({
       where: { id },
@@ -97,7 +97,7 @@ export class StageApprovalService {
     });
   }
 
-  async update(id: string, userId: string, data: UpdateStageApprovalInput) {
+  async update(id: number, userId: number, data: UpdateStageApprovalInput) {
     await this.findById(id);
     return this.prisma.stageApproval.update({
       where: { id },
@@ -109,14 +109,14 @@ export class StageApprovalService {
     });
   }
 
-  async delete(id: string) {
+  async delete(id: number) {
     await this.findById(id);
     return this.prisma.stageApproval.delete({
       where: { id }
     });
   }
 
-  async getTimeline(projectStageId: string) {
+  async getTimeline(projectStageId: number) {
     return this.prisma.stageApproval.findMany({
       where: { project_stage_id: projectStageId },
       select: {

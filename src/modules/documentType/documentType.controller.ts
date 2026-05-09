@@ -19,18 +19,18 @@ export class DocumentTypeController {
     );
   };
 
-  getOne = async (request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
-    const result = await this.service.findById(request.params.id);
+  getOne = async (request: FastifyRequest<{ Params: { id: number } }>, reply: FastifyReply) => {
+    const result = await this.service.findById(Number(request.params.id));
     return reply.send(successResponse(result, 'Document type details retrieved successfully'));
   };
 
-  update = async (request: FastifyRequest<{ Params: { id: string }; Body: UpdateDocumentTypeInput }>, reply: FastifyReply) => {
-    const result = await this.service.update(request.params.id, request.body);
+  update = async (request: FastifyRequest<{ Params: { id: number }; Body: UpdateDocumentTypeInput }>, reply: FastifyReply) => {
+    const result = await this.service.update(Number(request.params.id), request.body);
     return reply.send(successResponse(result, 'Document type updated successfully'));
   };
 
-  delete = async (request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
-    await this.service.delete(request.params.id);
+  delete = async (request: FastifyRequest<{ Params: { id: number } }>, reply: FastifyReply) => {
+    await this.service.delete(Number(request.params.id));
     return reply.send(successResponse(null, 'Document type deleted successfully'));
   };
 

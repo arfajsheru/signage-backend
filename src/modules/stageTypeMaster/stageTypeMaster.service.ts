@@ -59,7 +59,7 @@ export class StageTypeMasterService {
     return { stageTypes, total, page, limit };
   }
 
-  async findById(id: string) {
+  async findById(id: number) {
     const stageType = await this.prisma.stageTypeMaster.findUnique({
       where: { id }
     });
@@ -67,7 +67,7 @@ export class StageTypeMasterService {
     return stageType;
   }
 
-  async update(id: string, data: UpdateStageTypeInput) {
+  async update(id: number, data: UpdateStageTypeInput) {
     await this.findById(id);
 
     const updateData: any = {};
@@ -98,7 +98,7 @@ export class StageTypeMasterService {
     });
   }
 
-  async delete(id: string) {
+  async delete(id: number) {
     const stageType = await this.prisma.stageTypeMaster.findUnique({
       where: { id },
       include: {

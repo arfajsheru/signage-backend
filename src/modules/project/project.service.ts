@@ -10,7 +10,7 @@ import { NotFoundError, ValidationError } from "../../utils/errors.js";
 export class ProjectService {
   constructor(private prisma: PrismaClient) {}
 
-  async create(vendorId: string, userId: string, data: CreateProjectInput) {
+  async create(vendorId: number, userId: number, data: CreateProjectInput) {
     // 1. Validate Business Type
     const businessType = await this.prisma.businessType.findUnique({
       where: { id: data.business_type_id },
@@ -47,7 +47,7 @@ export class ProjectService {
     });
   }
 
-  async findAll(vendorId: string, filters: ProjectQueryFilters) {
+  async findAll(vendorId: number, filters: ProjectQueryFilters) {
     const page = parseInt(filters.page || "1", 10);
     const limit = parseInt(filters.limit || "10", 10);
     const skip = (page - 1) * limit;
@@ -111,7 +111,7 @@ export class ProjectService {
     return { projects, total, page, limit };
   }
 
-  async findById(vendorId: string, id: string) {
+  async findById(vendorId: number, id: number) {
     const project = await this.prisma.project.findFirst({
       where: { id, vendor_id: vendorId, is_active: true },
       include: {
@@ -140,7 +140,7 @@ export class ProjectService {
     return project;
   }
 
-  async getFullDetails(vendorId: string, id: string) {
+  async getFullDetails(vendorId: number, id: number) {
     const project = await this.prisma.project.findFirst({
       where: { id, vendor_id: vendorId, is_active: true },
       include: {
@@ -181,7 +181,7 @@ export class ProjectService {
     return project;
   }
 
-  async update(vendorId: string, id: string, data: UpdateProjectInput) {
+  async update(vendorId: number, id: number, data: UpdateProjectInput) {
     const existing = await this.findById(vendorId, id);
 
     // Validate Business Type if changing
@@ -214,7 +214,7 @@ export class ProjectService {
     });
   }
 
-  async updateStatus(vendorId: string, id: string, status: ProjectStatus) {
+  async updateStatus(vendorId: number, id: number, status: ProjectStatus) {
     await this.findById(vendorId, id);
     return this.prisma.project.update({
       where: { id },
@@ -222,7 +222,7 @@ export class ProjectService {
     });
   }
 
-  async softDelete(vendorId: string, id: string) {
+  async softDelete(vendorId: number, id: number) {
     await this.findById(vendorId, id);
     return this.prisma.project.update({
       where: { id },
@@ -230,7 +230,7 @@ export class ProjectService {
     });
   }
 
-  async search(vendorId: string, query: string) {
+  async search(vendorId: number, query: string) {
     return this.prisma.project.findMany({
       where: {
         vendor_id: vendorId,
@@ -251,7 +251,7 @@ export class ProjectService {
     });
   }
 
-  async getStats(vendorId: string): Promise<ProjectStats> {
+  async getStats(vendorId: number): Promise<ProjectStats> {
     const now = new Date();
 
     const [total, active, completed, delayed, signage, print] =

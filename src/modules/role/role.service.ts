@@ -42,13 +42,13 @@ export class RoleService {
     return { roles, total, page, limit };
   }
 
-  async findById(id: string) {
+  async findById(id: number) {
     const role = await this.prisma.role.findUnique({ where: { id } });
     if (!role) throw new NotFoundError('Role not found');
     return role;
   }
 
-  async update(id: string, data: UpdateRoleInput) {
+  async update(id: number, data: UpdateRoleInput) {
     await this.findById(id);
     const name = data.name.toUpperCase().trim();
 
@@ -58,7 +58,7 @@ export class RoleService {
     });
   }
 
-  async delete(id: string) {
+  async delete(id: number) {
     const role = await this.prisma.role.findUnique({
       where: { id },
       include: { _count: { select: { users: true } } }

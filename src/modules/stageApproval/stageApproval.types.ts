@@ -1,7 +1,7 @@
 import { ApprovalStatus } from '@prisma/client';
 
 export interface CreateStageApprovalInput {
-  project_stage_id: string;
+  project_stage_id: number;
   approval_status: ApprovalStatus;
   remarks?: string;
 }
@@ -14,9 +14,9 @@ export interface UpdateStageApprovalInput {
 export interface StageApprovalQueryFilters {
   page?: string;
   limit?: string;
-  project_stage_id?: string;
+  project_stage_id?: number;
   approval_status?: ApprovalStatus;
-  approved_by?: string;
+  approved_by?: number;
 }
 
 export interface StageApprovalStats {

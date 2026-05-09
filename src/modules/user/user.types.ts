@@ -1,6 +1,6 @@
 export interface CreateUserInput {
-  vendor_id: string;
-  role_id: string;
+  vendor_id: number;
+  role_id: number;
   name: string;
   email: string;
   password: string;
@@ -24,6 +24,6 @@ export interface UserQueryFilters {
   page?: string;
   limit?: string;
   search?: string;
-  vendor_id?: string;
-  role_id?: string;
+  vendor_id?: number;
+  role_id?: number;
 }

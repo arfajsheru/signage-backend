@@ -5,7 +5,7 @@ export const createStageApprovalSchema = {
     type: 'object',
     required: ['project_stage_id', 'approval_status'],
     properties: {
-      project_stage_id: { type: 'string', format: 'uuid' },
+      project_stage_id: { type: 'integer' },
       approval_status: { type: 'string', enum: Object.values(ApprovalStatus) },
       remarks: { type: 'string' }
     }
@@ -38,9 +38,9 @@ export const stageApprovalQuerySchema = {
     properties: {
       page: { type: 'string', default: '1' },
       limit: { type: 'string', default: '10' },
-      project_stage_id: { type: 'string', format: 'uuid' },
+      project_stage_id: { type: 'integer' },
       approval_status: { type: 'string', enum: Object.values(ApprovalStatus) },
-      approved_by: { type: 'string', format: 'uuid' }
+      approved_by: { type: 'integer' }
     }
   }
 };
@@ -50,7 +50,7 @@ export const projectStageParamsSchema = {
     type: 'object',
     required: ['projectStageId'],
     properties: {
-      projectStageId: { type: 'string', format: 'uuid' }
+      projectStageId: { type: 'integer' }
     }
   }
 };

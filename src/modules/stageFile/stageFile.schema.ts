@@ -3,7 +3,7 @@ export const updateStageFileSchema = {
     type: 'object',
     required: ['document_type_id'],
     properties: {
-      document_type_id: { type: 'string', format: 'uuid' }
+      document_type_id: { type: 'integer' }
     }
   }
 };
@@ -14,9 +14,9 @@ export const stageFileQuerySchema = {
     properties: {
       page: { type: 'string', default: '1' },
       limit: { type: 'string', default: '10' },
-      project_stage_id: { type: 'string', format: 'uuid' },
-      document_type_id: { type: 'string', format: 'uuid' },
-      uploaded_by: { type: 'string', format: 'uuid' },
+      project_stage_id: { type: 'integer' },
+      document_type_id: { type: 'integer' },
+      uploaded_by: { type: 'integer' },
       search: { type: 'string' }
     }
   }
@@ -27,7 +27,7 @@ export const projectStageParamsSchema = {
     type: 'object',
     required: ['projectStageId'],
     properties: {
-      projectStageId: { type: 'string', format: 'uuid' }
+      projectStageId: { type: 'integer' }
     }
   }
 };

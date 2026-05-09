@@ -20,25 +20,25 @@ export class StageApprovalController {
     );
   };
 
-  getOne = async (request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
-    const result = await this.service.findById(request.params.id);
+  getOne = async (request: FastifyRequest<{ Params: { id: number } }>, reply: FastifyReply) => {
+    const result = await this.service.findById(Number(request.params.id));
     return reply.send(successResponse(result, 'Stage approval details retrieved successfully'));
   };
 
   getByStage = async (request: FastifyRequest, reply: FastifyReply) => {
-    const { projectStageId } = request.params as { projectStageId: string };
+    const { projectStageId } = request.params as { projectStageId: number };
     const result = await this.service.findByStageId(projectStageId);
     return reply.send(successResponse(result, 'Project stage approvals retrieved successfully'));
   };
 
-  approve = async (request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
+  approve = async (request: FastifyRequest<{ Params: { id: number } }>, reply: FastifyReply) => {
     const userId = request.user!.id;
-    const result = await this.service.approve(request.params.id, userId);
+    const result = await this.service.approve(Number(request.params.id), userId);
     return reply.send(successResponse(result, 'Stage approved successfully'));
   };
 
   reject = async (request: FastifyRequest, reply: FastifyReply) => {
-    const { id } = request.params as { id: string };
+    const { id } = request.params as { id: number };
     const { remarks } = request.body as { remarks: string };
     const userId = request.user!.id;
     const result = await this.service.reject(id, userId, remarks);
@@ -46,20 +46,20 @@ export class StageApprovalController {
   };
 
   update = async (request: FastifyRequest, reply: FastifyReply) => {
-    const { id } = request.params as { id: string };
+    const { id } = request.params as { id: number };
     const body = request.body as UpdateStageApprovalInput;
     const userId = request.user!.id;
     const result = await this.service.update(id, userId, body);
     return reply.send(successResponse(result, 'Stage approval updated successfully'));
   };
 
-  delete = async (request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
-    await this.service.delete(request.params.id);
+  delete = async (request: FastifyRequest<{ Params: { id: number } }>, reply: FastifyReply) => {
+    await this.service.delete(Number(request.params.id));
     return reply.send(successResponse(null, 'Stage approval deleted successfully'));
   };
 
   getTimeline = async (request: FastifyRequest, reply: FastifyReply) => {
-    const { projectStageId } = request.params as { projectStageId: string };
+    const { projectStageId } = request.params as { projectStageId: number };
     const result = await this.service.getTimeline(projectStageId);
     return reply.send(successResponse(result, 'Stage approval timeline retrieved successfully'));
   };

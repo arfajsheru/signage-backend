@@ -40,10 +40,10 @@ export class UserController {
   };
 
   update = async (
-    request: FastifyRequest<{ Params: { id: string }; Body: UpdateUserInput }>,
+    request: FastifyRequest<{ Params: { id: number }; Body: UpdateUserInput }>,
     reply: FastifyReply
   ) => {
-    const user = await this.service.update(request.params.id, request.body);
+    const user = await this.service.update(Number(request.params.id), request.body);
     return reply.send(successResponse(user, 'User updated successfully'));
   };
 }

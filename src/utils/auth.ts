@@ -13,8 +13,8 @@ export const comparePassword = async (password: string, hash: string): Promise<b
   return bcrypt.compare(password, hash);
 };
 
-export const generateToken = (payload: object, expiresIn: string = '7d'): string => {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn });
+export const generateToken = (payload: any, expiresIn: string | number = '7d'): string => {
+  return jwt.sign(payload, JWT_SECRET, { expiresIn: expiresIn as any });
 };
 
 export const verifyToken = (token: string): any => {

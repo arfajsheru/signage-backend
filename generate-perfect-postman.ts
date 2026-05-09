@@ -1,267 +1,266 @@
 import { writeFileSync } from 'fs';
+import { buildApp } from './src/app.js';
 
-const baseUrl = "http://localhost:5001";
+/**
+ * Format string to Title Case nicely
+ */
+function toTitleCase(str: string): string {
+  return str
+    .replace(/[-_]/g, ' ')
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+}
 
-const collection = {
-	"info": {
-		"_postman_id": "a1b2c3d4-e5f6-4g7h-8i9j-k0l1m2n3o4p5",
-		"name": "Signage ERP Professional",
-		"description": "Clean and professional API collection for Signage ERP system.",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-	},
-	"item": [
-		{
-			"name": "1. Authentication",
-			"item": [
-				{
-					"name": "Login",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"vendor_id\": \"7c9e6639-74b0-4054-8025-8848f060d4e9\",\n    \"identifier\": \"admin@unitedgraphics.com\",\n    \"password\": \"password123\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/users/login",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"users",
-								"login"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get My Profile",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseUrl}}/users/me",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"users",
-								"me"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "2. Vendors",
-			"item": [
-				{
-					"name": "Create Vendor",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"United Graphics\",\n    \"contact_person\": \"Arfaj Sheru\",\n    \"phone\": \"9876543210\",\n    \"email\": \"info@unitedgraphics.com\",\n    \"address\": \"Mumbai, Maharashtra\",\n    \"gst_number\": \"27AAACU1234A1Z5\",\n    \"pan_number\": \"AAACU1234A\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/vendors",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"vendors"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get All Vendors",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseUrl}}/vendors?page=1&limit=10",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"vendors"
-							],
-							"query": [
-								{
-									"key": "page",
-									"value": "1"
-								},
-								{
-									"key": "limit",
-									"value": "10"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "3. Master Data",
-			"item": [
-				{
-					"name": "Get Business Types",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseUrl}}/project-types",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"project-types"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Stage Types",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseUrl}}/stage-types",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"stage-types"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "4. Projects",
-			"item": [
-				{
-					"name": "Create Project",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Lollipop Signage\",\n    \"description\": \"Outdoor LED signage\",\n    \"business_type_id\": \"uuid-here\",\n    \"total_amount\": 15000,\n    \"advance_paid\": 5000,\n    \"deadline\": \"2024-12-30T00:00:00Z\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/projects",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"projects"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Project Stats",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseUrl}}/projects/stats",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"projects",
-								"stats"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		}
-	],
-	"variable": [
-		{
-			"key": "baseUrl",
-			"value": "http://localhost:5001",
-			"type": "string"
-		},
-		{
-			"key": "token",
-			"value": "PASTE_TOKEN_HERE",
-			"type": "string"
-		}
-	]
-};
+/**
+ * Generate a nice human-readable name for a route
+ */
+function generateRequestName(method: string, path: string): string {
+  const parts = path.split('/').filter(Boolean);
+  if (parts.length === 0) return 'Health Check';
 
-writeFileSync('Signage-API-Collection.json', JSON.stringify(collection, null, 2));
-console.log('✅ Postman Collection Updated in Standard Format!');
+  // Make resource singular (e.g., vendors -> Vendor, project-types -> Project Type)
+  let rawResource = parts[0];
+  if (rawResource.endsWith('s')) rawResource = rawResource.slice(0, -1);
+  const resource = toTitleCase(rawResource);
+  
+  if (method === 'post' && parts.length === 1) return `Create ${resource}`;
+  if (method === 'get' && parts.length === 1) return `Get ${resource} List`;
+  
+  const hasId = parts[1]?.includes('{');
+  
+  if (method === 'get' && hasId) {
+    if (parts.length === 2) return `Get ${resource} Details`;
+    if (parts.length > 2) return `Get ${resource} ${toTitleCase(parts.slice(2).join(' '))}`;
+  }
+  
+  if ((method === 'put' || method === 'patch') && hasId) {
+     if (parts.length === 2) return `Update ${resource}`;
+     if (parts.length > 2) return `Update ${resource} ${toTitleCase(parts.slice(2).join(' '))}`;
+  }
+  
+  if (method === 'delete' && hasId) {
+    if (parts.length === 2) return `Delete ${resource}`;
+    if (parts.length > 2) return `Delete ${resource} ${toTitleCase(parts.slice(2).join(' '))}`;
+  }
+  
+  // Custom or nested routes without ID in second position
+  if (parts[1] && !parts[1].includes('{')) {
+     if (method === 'post') return `${toTitleCase(parts[1])} ${resource}`;
+     return `${method === 'get' ? 'Get' : toTitleCase(method)} ${resource} ${toTitleCase(parts[1])}`;
+  }
+
+  return `${method.toUpperCase()} ${path}`;
+}
+
+/**
+ * Generate dummy value for JSON schema property
+ */
+function getDummyValue(prop: any): any {
+  if (prop.default !== undefined) return prop.default;
+  if (prop.example !== undefined) return prop.example;
+  
+  switch (prop.type) {
+    case 'string':
+      if (prop.format === 'email') return 'admin@example.com';
+      if (prop.format === 'date-time') return new Date().toISOString();
+      if (prop.enum) return prop.enum[0];
+      return "example_string";
+    case 'number':
+    case 'integer':
+      return 1;
+    case 'boolean':
+      return true;
+    case 'array':
+      return prop.items ? [getDummyValue(prop.items)] : [];
+    case 'object':
+      if (prop.properties) return generateExampleBody(prop);
+      return {};
+    default:
+      return "mixed";
+  }
+}
+
+/**
+ * Build a full JSON object from OpenAPI schema
+ */
+function generateExampleBody(schema: any): any {
+  if (!schema || !schema.properties) return {};
+  const example: any = {};
+  for (const [key, prop] of Object.entries(schema.properties)) {
+    example[key] = getDummyValue(prop);
+  }
+  return example;
+}
+
+async function generate() {
+  console.log('🚀 Starting Perfect Postman Collection Generator...');
+  
+  const app = await buildApp();
+  await app.ready();
+  
+  // Get Swagger spec
+  const swagger: any = app.swagger();
+  
+  // Base Collection Template
+  const collection = {
+    info: {
+      name: "Signage ERP Professional",
+      description: "Auto-generated production-grade Postman collection for the complete Signage ERP backend.",
+      schema: "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    item: [] as any[],
+    variable: [
+      { key: "baseUrl", value: "http://localhost:5001", type: "string" },
+      { key: "token", value: "YOUR_JWT_TOKEN", type: "string" }
+    ]
+  };
+
+  const folders: Record<string, any> = {};
+
+  // Group paths into folders
+  for (const [path, methods] of Object.entries(swagger.paths)) {
+    // Determine folder name from the first path segment
+    const segment = path.split('/')[1] || 'Core';
+    const folderName = toTitleCase(segment);
+
+    if (!folders[folderName]) {
+      folders[folderName] = {
+        name: folderName,
+        item: []
+      };
+      collection.item.push(folders[folderName]);
+    }
+
+    // Replace swagger params {id} with postman params {{id}} in URL
+    const postmanUrlPath = path.split('/').map(p => {
+       if (p.startsWith('{') && p.endsWith('}')) return `{{${p.substring(1, p.length - 1)}}}`;
+       return p;
+    });
+
+    for (const [method, endpoint] of Object.entries(methods as any)) {
+      const isMultipart = endpoint.consumes?.includes('multipart/form-data');
+      
+      const reqItem: any = {
+        name: generateRequestName(method, path),
+        request: {
+          method: method.toUpperCase(),
+          header: [],
+          url: {
+            raw: `{{baseUrl}}${postmanUrlPath.join('/')}`,
+            host: ["{{baseUrl}}"],
+            path: postmanUrlPath.filter(Boolean)
+          }
+        },
+        response: []
+      };
+
+      // Handle Authorization Header dynamically. 
+      // If the route has "authenticate" hook, we add the Bearer token.
+      // Fastify swagger doesn't easily expose hook info unless specifically defined in security schema.
+      // But we can safely add it to all routes EXCEPT explicit public ones (like /users/login, /users/register)
+      const isPublic = path.includes('/login') || path.includes('/register') || path === '/' || path === '/health';
+      if (!isPublic) {
+        reqItem.request.header.push({
+          key: "Authorization",
+          value: "Bearer {{token}}",
+          type: "text",
+          description: "JWT Authorization header"
+        });
+      }
+
+      // Query parameters
+      if (endpoint.parameters) {
+        reqItem.request.url.query = endpoint.parameters
+          .filter((p: any) => p.in === 'query')
+          .map((p: any) => ({
+            key: p.name,
+            value: getDummyValue(p.schema || p).toString(),
+            description: p.description || ''
+          }));
+      }
+
+      // Body parameters
+      if (endpoint.requestBody && endpoint.requestBody.content) {
+        const jsonContent = endpoint.requestBody.content['application/json'];
+        const multipartContent = endpoint.requestBody.content['multipart/form-data'];
+
+        if (jsonContent && jsonContent.schema) {
+          const bodySchema = jsonContent.schema;
+          const exampleBody = generateExampleBody(bodySchema);
+          
+          reqItem.request.body = {
+            mode: "raw",
+            raw: JSON.stringify(exampleBody, null, 2),
+            options: { raw: { language: "json" } }
+          };
+        } else if (multipartContent) {
+           // File Upload handling
+           reqItem.request.body = {
+             mode: "formdata",
+             formdata: []
+           };
+           // Basic heuristic for typical file uploads
+           reqItem.request.body.formdata.push({
+             key: "file",
+             type: "file",
+             description: "Upload your document here"
+           });
+           reqItem.request.body.formdata.push({
+             key: "document_type_id",
+             value: "1",
+             type: "text"
+           });
+           reqItem.request.body.formdata.push({
+             key: "project_stage_id",
+             value: "1",
+             type: "text"
+           });
+        }
+      } else if (endpoint.parameters && endpoint.parameters.some((p: any) => p.in === 'body')) {
+          // Swagger 2.0 fallback
+          const bodyParam = endpoint.parameters.find((p: any) => p.in === 'body');
+          if (bodyParam && bodyParam.schema) {
+              const exampleBody = generateExampleBody(bodyParam.schema);
+              reqItem.request.body = {
+                mode: "raw",
+                raw: JSON.stringify(exampleBody, null, 2),
+                options: { raw: { language: "json" } }
+              };
+          }
+      } else if (method.toUpperCase() === 'POST' || method.toUpperCase() === 'PUT' || method.toUpperCase() === 'PATCH') {
+          // Fallback empty body
+          reqItem.request.body = {
+            mode: "raw",
+            raw: "{}",
+            options: { raw: { language: "json" } }
+          };
+      }
+
+      folders[folderName].item.push(reqItem);
+    }
+  }
+
+  writeFileSync('Signage-API-Collection.json', JSON.stringify(collection, null, 2));
+  console.log('✅ Collection saved to Signage-API-Collection.json');
+  
+  // Generate environment file
+  const environment = {
+    id: "signage-env-1234",
+    name: "Signage ERP Environment",
+    values: [
+      { key: "baseUrl", value: "http://localhost:5001", type: "default", enabled: true },
+      { key: "token", value: "YOUR_JWT_TOKEN", type: "default", enabled: true },
+      { key: "vendor_id", value: "1", type: "default", enabled: true },
+      { key: "project_id", value: "1", type: "default", enabled: true },
+      { key: "user_id", value: "1", type: "default", enabled: true }
+    ]
+  };
+  writeFileSync('Signage-API-Environment.json', JSON.stringify(environment, null, 2));
+  console.log('✅ Environment saved to Signage-API-Environment.json');
+
+  await app.close();
+  process.exit(0);
+}
+
+generate().catch(console.error);

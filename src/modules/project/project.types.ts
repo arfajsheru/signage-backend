@@ -3,8 +3,8 @@ import { ProjectStatus } from '@prisma/client';
 export interface CreateProjectInput {
   name: string;
   description?: string;
-  business_type_id: string;
-  channel_partner_id?: string;
+  business_type_id: number;
+  channel_partner_id?: number;
   total_amount?: number;
   advance_paid?: number;
   deadline?: string;
@@ -13,8 +13,8 @@ export interface CreateProjectInput {
 export interface UpdateProjectInput {
   name?: string;
   description?: string;
-  business_type_id?: string;
-  channel_partner_id?: string;
+  business_type_id?: number;
+  channel_partner_id?: number;
   total_amount?: number;
   advance_paid?: number;
   deadline?: string;
@@ -25,10 +25,10 @@ export interface ProjectQueryFilters {
   page?: string;
   limit?: string;
   search?: string;
-  business_type_id?: string;
-  channel_partner_id?: string;
+  business_type_id?: number;
+  channel_partner_id?: number;
   status?: ProjectStatus;
-  created_by?: string;
+  created_by?: number;
   sortBy?: string;
   sortOrder?: 'asc' | 'desc';
 }

@@ -7,7 +7,7 @@ datasource db {
 }
 
 model Vendor {
-  id              String   @id @default(uuid())
+  id              Int      @id @default(autoincrement())
 
   name            String
   contact_person  String?
@@ -34,7 +34,7 @@ model Vendor {
 }
 
 model Role {
-  id         String   @id @default(uuid())
+  id         Int      @id @default(autoincrement())
 
   name       String   @unique
 
@@ -45,14 +45,14 @@ model Role {
 }
 
 model User {
-  id String @id @default(uuid())
+  id Int @id @default(autoincrement())
 
   // Vendor relation
-  vendor_id String
+  vendor_id Int
   vendor    Vendor @relation(fields: [vendor_id], references: [id])
 
   // Role relation
-  role_id String
+  role_id Int
   role    Role   @relation(fields: [role_id], references: [id])
 
   // Basic info
@@ -86,10 +86,10 @@ model User {
 }
 
 model ChannelPartner {
-  id String @id @default(uuid())
+  id Int @id @default(autoincrement())
 
   // Vendor relation
-  vendor_id String
+  vendor_id Int
   vendor    Vendor @relation(fields: [vendor_id], references: [id])
 
   // Basic info
@@ -123,7 +123,7 @@ model ChannelPartner {
 }
 
 model BusinessType {
-  id String @id @default(uuid())
+  id Int @id @default(autoincrement())
 
   // Example:
   // PRINT
@@ -140,7 +140,7 @@ model BusinessType {
 }
 
 model StageTypeMaster {
-  id String @id @default(uuid())
+  id Int @id @default(autoincrement())
 
   // Example:
   // 1 = CREATED
@@ -158,18 +158,18 @@ model StageTypeMaster {
 }
 
 model Project {
-  id String @id @default(uuid())
+  id Int @id @default(autoincrement())
 
   // Vendor relation
-  vendor_id String
+  vendor_id Int
   vendor    Vendor @relation(fields: [vendor_id], references: [id])
 
   // Business type relation
-  business_type_id String
+  business_type_id Int
   business_type    BusinessType @relation(fields: [business_type_id], references: [id])
 
   // Channel partner relation (null = direct project, set = referred project)
-  channel_partner_id String?
+  channel_partner_id Int?
   channel_partner    ChannelPartner? @relation(fields: [channel_partner_id], references: [id])
 
   // Basic project info
@@ -186,7 +186,7 @@ model Project {
   deadline DateTime?
 
   // Created by
-  created_by      String
+  created_by      Int
   created_by_user User   @relation("ProjectCreatedBy", fields: [created_by], references: [id])
 
   is_active  Boolean  @default(true)
@@ -206,14 +206,14 @@ model Project {
 }
 
 model ProjectAssignment {
-  id String @id @default(uuid())
+  id Int @id @default(autoincrement())
 
   // Project relation
-  project_id String
+  project_id Int
   project    Project @relation(fields: [project_id], references: [id])
 
   // User relation
-  user_id String
+  user_id Int
   user    User   @relation(fields: [user_id], references: [id])
 
   assigned_at DateTime @default(now())
@@ -223,14 +223,14 @@ model ProjectAssignment {
 }
 
 model ProjectWorkflow {
-  id String @id @default(uuid())
+  id Int @id @default(autoincrement())
 
   // Business type relation
-  business_type_id String
+  business_type_id Int
   business_type    BusinessType @relation(fields: [business_type_id], references: [id])
 
   // Stage relation
-  stage_id String
+  stage_id Int
   stage    StageTypeMaster @relation(fields: [stage_id], references: [id])
 
   // Stage order
@@ -242,14 +242,14 @@ model ProjectWorkflow {
 }
 
 model ProjectStage {
-  id String @id @default(uuid())
+  id Int @id @default(autoincrement())
 
   // Project relation
-  project_id String
+  project_id Int
   project    Project @relation(fields: [project_id], references: [id])
 
   // Stage relation
-  stage_id String
+  stage_id Int
   stage    StageTypeMaster @relation(fields: [stage_id], references: [id])
 
   // Stage status
@@ -261,7 +261,7 @@ model ProjectStage {
   remarks String?
 
   // Created by
-  created_by   String
+  created_by   Int
   created_user User   @relation(fields: [created_by], references: [id])
 
   created_at DateTime @default(now())
@@ -275,7 +275,7 @@ model ProjectStage {
 }
 
 model DocumentType {
-  id String @id @default(uuid())
+  id Int @id @default(autoincrement())
 
   // Example:
   // 1 = DESIGN
@@ -291,10 +291,10 @@ model DocumentType {
 }
 
 model StageFile {
-  id String @id @default(uuid())
+  id Int @id @default(autoincrement())
 
   // Project stage relation
-  project_stage_id String
+  project_stage_id Int
   project_stage    ProjectStage @relation(fields: [project_stage_id], references: [id])
 
   // File URL and Storage Info
@@ -302,11 +302,11 @@ model StageFile {
   public_id String?
 
   // Document type relation
-  document_type_id String
+  document_type_id Int
   document_type    DocumentType @relation(fields: [document_type_id], references: [id])
 
   // Uploaded by
-  uploaded_by   String
+  uploaded_by   Int
   uploaded_user User   @relation(fields: [uploaded_by], references: [id])
 
   created_at DateTime @default(now())
@@ -316,10 +316,10 @@ model StageFile {
 }
 
 model StageApproval {
-  id String @id @default(uuid())
+  id Int @id @default(autoincrement())
 
   // Project stage relation
-  project_stage_id String
+  project_stage_id Int
   project_stage    ProjectStage @relation(fields: [project_stage_id], references: [id])
 
   // Approval status
@@ -328,7 +328,7 @@ model StageApproval {
   remarks String?
 
   // Approved by
-  approved_by   String?
+  approved_by   Int?
   approved_user User?   @relation(fields: [approved_by], references: [id])
 
   approved_at DateTime?

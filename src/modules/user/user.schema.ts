@@ -3,8 +3,8 @@ export const createUserSchema = {
     type: 'object',
     required: ['vendor_id', 'role_id', 'name', 'email', 'password'],
     properties: {
-      vendor_id: { type: 'string', format: 'uuid' },
-      role_id: { type: 'string', format: 'uuid' },
+      vendor_id: { type: 'integer' },
+      role_id: { type: 'integer' },
       name: { type: 'string', minLength: 2 },
       email: { type: 'string', format: 'email' },
       password: { type: 'string', minLength: 6 },
@@ -44,8 +44,8 @@ export const userQuerySchema = {
       page: { type: 'string', default: '1' },
       limit: { type: 'string', default: '10' },
       search: { type: 'string' },
-      vendor_id: { type: 'string' },
-      role_id: { type: 'string' }
+      vendor_id: { type: 'integer' },
+      role_id: { type: 'integer' }
     }
   }
 };

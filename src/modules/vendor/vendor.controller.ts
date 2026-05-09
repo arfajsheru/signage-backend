@@ -25,26 +25,26 @@ export class VendorController {
   };
 
   getOne = async (
-    request: FastifyRequest<{ Params: { id: string } }>,
+    request: FastifyRequest<{ Params: { id: number } }>,
     reply: FastifyReply
   ) => {
-    const vendor = await this.service.findById(request.params.id);
+    const vendor = await this.service.findById(Number(request.params.id));
     return reply.send(successResponse(vendor, 'Business details retrieved successfully'));
   };
 
   update = async (
-    request: FastifyRequest<{ Params: { id: string }; Body: UpdateVendorInput }>,
+    request: FastifyRequest<{ Params: { id: number }; Body: UpdateVendorInput }>,
     reply: FastifyReply
   ) => {
-    const vendor = await this.service.update(request.params.id, request.body);
+    const vendor = await this.service.update(Number(request.params.id), request.body);
     return reply.send(successResponse(vendor, 'Business updated successfully'));
   };
 
   delete = async (
-    request: FastifyRequest<{ Params: { id: string } }>,
+    request: FastifyRequest<{ Params: { id: number } }>,
     reply: FastifyReply
   ) => {
-    await this.service.delete(request.params.id);
+    await this.service.delete(Number(request.params.id));
     return reply.send(successResponse(null, 'Business deactivated successfully'));
   };
 }

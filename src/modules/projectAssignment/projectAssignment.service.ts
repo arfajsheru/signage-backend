@@ -4,7 +4,7 @@ import { NotFoundError, ValidationError } from '../../utils/errors.js';
 export class ProjectAssignmentService {
   constructor(private prisma: PrismaClient) {}
 
-  async assignUser(vendorId: string, projectId: string, userId: string) {
+  async assignUser(vendorId: number, projectId: number, userId: number) {
     // 1. Verify project belongs to same vendor
     const project = await this.prisma.project.findFirst({
       where: { id: projectId, vendor_id: vendorId }
@@ -36,7 +36,7 @@ export class ProjectAssignmentService {
     });
   }
 
-  async removeUser(vendorId: string, projectId: string, userId: string) {
+  async removeUser(vendorId: number, projectId: number, userId: number) {
     // Verify project belongs to vendor
     const project = await this.prisma.project.findFirst({
       where: { id: projectId, vendor_id: vendorId }
@@ -53,7 +53,7 @@ export class ProjectAssignmentService {
     });
   }
 
-  async getProjectUsers(vendorId: string, projectId: string) {
+  async getProjectUsers(vendorId: number, projectId: number) {
     const project = await this.prisma.project.findFirst({
       where: { id: projectId, vendor_id: vendorId }
     });

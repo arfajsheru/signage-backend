@@ -1,154 +1,2543 @@
 {
-	"info": {
-		"_postman_id": "final-ultimate-collection-id-123",
-		"name": "Signage ERP - Ultimate Collection v2",
-		"description": "Final complete collection with all modules including the new Roles APIs.",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-	},
-	"item": [
-		{
-			"name": "1. Authentication",
-			"item": [
-				{
-					"name": "User Login",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"vendor_id\": \"7c9e6639-74b0-4054-8025-8848f060d4e9\",\n    \"identifier\": \"admin@unitedgraphics.com\",\n    \"password\": \"password123\"\n}",
-							"options": { "raw": { "language": "json" } }
-						},
-						"url": { "raw": "{{baseUrl}}/users/login" }
-					}
-				},
-				{
-					"name": "Register User",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"vendor_id\": \"<vendor_uuid>\",\n    \"role_id\": \"<role_uuid>\",\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"password\": \"password123\",\n    \"phone\": \"9876543210\"\n}",
-							"options": { "raw": { "language": "json" } }
-						},
-						"url": { "raw": "{{baseUrl}}/users/register" }
-					}
-				}
-			]
-		},
-		{
-			"name": "2. Vendors",
-			"item": [
-				{
-					"name": "Create Vendor",
-					"request": {
-						"method": "POST",
-						"header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"United Graphics\",\n    \"contact_person\": \"Arfaj Sheru\",\n    \"phone\": \"9876543210\",\n    \"email\": \"info@unitedgraphics.com\",\n    \"address\": \"Mumbai, Maharashtra\",\n    \"gst_number\": \"27AAACU1234A1Z5\",\n    \"pan_number\": \"AAACU1234A\"\n}",
-							"options": { "raw": { "language": "json" } }
-						},
-						"url": { "raw": "{{baseUrl}}/vendors" }
-					}
-				},
-				{
-					"name": "Get All Vendors",
-					"request": {
-						"method": "GET",
-						"header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
-						"url": { "raw": "{{baseUrl}}/vendors" }
-					}
-				}
-			]
-		},
-		{
-			"name": "3. Masters (Roles & Types)",
-			"item": [
-				{
-					"name": "Roles",
-					"item": [
-						{
-							"name": "Create Role",
-							"request": {
-								"method": "POST",
-								"header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"name\": \"ADMIN\"\n}",
-									"options": { "raw": { "language": "json" } }
-								},
-								"url": { "raw": "{{baseUrl}}/roles" }
-							}
-						},
-						{
-							"name": "Get All Roles",
-							"request": {
-								"method": "GET",
-								"header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
-								"url": { "raw": "{{baseUrl}}/roles" }
-							}
-						}
-					]
-				},
-				{
-					"name": "Business Types",
-					"item": [
-						{
-							"name": "Get All Types",
-							"request": {
-								"method": "GET",
-								"header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
-								"url": { "raw": "{{baseUrl}}/project-types" }
-							}
-						},
-						{
-							"name": "Create Type",
-							"request": {
-								"method": "POST",
-								"header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"name\": \"SIGNAGE\"\n}",
-									"options": { "raw": { "language": "json" } }
-								},
-								"url": { "raw": "{{baseUrl}}/project-types" }
-							}
-						}
-					]
-				}
-			]
-		},
-		{
-			"name": "4. Projects",
-			"item": [
-				{
-					"name": "Create Project",
-					"request": {
-						"method": "POST",
-						"header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Lollipop Signage\",\n    \"description\": \"Outdoor LED signage\",\n    \"business_type_id\": \"<uuid_from_project_types>\",\n    \"total_amount\": 15000,\n    \"advance_paid\": 5000,\n    \"deadline\": \"2024-12-30T00:00:00Z\"\n}",
-							"options": { "raw": { "language": "json" } }
-						},
-						"url": { "raw": "{{baseUrl}}/projects" }
-					}
-				},
-				{
-					"name": "Get Project Full Details",
-					"request": {
-						"method": "GET",
-						"header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
-						"url": { "raw": "{{baseUrl}}/projects/:id/full-details" }
-					}
-				}
-			]
-		}
-	],
-	"variable": [
-		{ "key": "baseUrl", "value": "http://localhost:5001" },
-		{ "key": "token", "value": "" }
-	]
+  "info": {
+    "name": "Signage ERP Professional",
+    "description": "Auto-generated production-grade Postman collection for the complete Signage ERP backend.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Vendors",
+      "item": [
+        {
+          "name": "Create Vendor Vendor",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/vendors/create-vendor",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "vendors",
+                "create-vendor"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Vendor List",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/vendors/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "vendors"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Vendor Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/vendors/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "vendors",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Vendor",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/vendors/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "vendors",
+                "{{id}}"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Vendor",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/vendors/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "vendors",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "register"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vendor_id\": 1,\n  \"role_id\": 1,\n  \"name\": \"example_string\",\n  \"email\": \"admin@example.com\",\n  \"password\": \"example_string\",\n  \"phone\": \"example_string\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login User",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identifier\": \"example_string\",\n  \"password\": \"example_string\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Me",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User List",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": ""
+                },
+                {
+                  "key": "search",
+                  "value": "example_string",
+                  "description": ""
+                },
+                {
+                  "key": "vendor_id",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "role_id",
+                  "value": "1",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "{{id}}"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"example_string\",\n  \"email\": \"admin@example.com\",\n  \"password\": \"example_string\",\n  \"phone\": \"example_string\",\n  \"is_active\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Business Types",
+      "item": [
+        {
+          "name": "Create Business Type",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/business-types/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "business-types"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Business Type List",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/business-types/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "business-types"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Business Type Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/business-types/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "business-types",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Business Type",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/business-types/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "business-types",
+                "{{id}}"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Business Type",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/business-types/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "business-types",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Projects",
+      "item": [
+        {
+          "name": "Create Project",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/projects/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "projects"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"example_string\",\n  \"description\": \"example_string\",\n  \"business_type_id\": 1,\n  \"channel_partner_id\": 1,\n  \"total_amount\": 1,\n  \"advance_paid\": 1,\n  \"deadline\": \"2026-05-09T20:21:29.015Z\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Project List",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/projects/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "projects"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": ""
+                },
+                {
+                  "key": "search",
+                  "value": "example_string",
+                  "description": ""
+                },
+                {
+                  "key": "business_type_id",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "channel_partner_id",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "status",
+                  "value": "CREATED",
+                  "description": ""
+                },
+                {
+                  "key": "created_by",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "sortBy",
+                  "value": "example_string",
+                  "description": ""
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "asc",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Project Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/projects/stats",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "projects",
+                "stats"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Project Search",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/projects/search",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "projects",
+                "search"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Project Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/projects/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "projects",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Project",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/projects/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "projects",
+                "{{id}}"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"example_string\",\n  \"description\": \"example_string\",\n  \"business_type_id\": 1,\n  \"channel_partner_id\": 1,\n  \"total_amount\": 1,\n  \"advance_paid\": 1,\n  \"deadline\": \"2026-05-09T20:21:29.016Z\",\n  \"status\": \"CREATED\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Project",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/projects/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "projects",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Project Full Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/projects/{{id}}/full-details",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "projects",
+                "{{id}}",
+                "full-details"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Project Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/projects/{{id}}/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "projects",
+                "{{id}}",
+                "status"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"CREATED\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Project Assignments",
+      "item": [
+        {
+          "name": "Create Project Assignment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/project-assignments/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "project-assignments"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Project Assignment Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/project-assignments/{{projectId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "project-assignments",
+                "{{projectId}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Project Assignment {userid}",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/project-assignments/{{projectId}}/{{userId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "project-assignments",
+                "{{projectId}}",
+                "{{userId}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Stage Types",
+      "item": [
+        {
+          "name": "Get Stage Type Dropdown",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/stage-types/dropdown",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "stage-types",
+                "dropdown"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Stage Type",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/stage-types/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "stage-types"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"stage_type\": 1,\n  \"name\": \"example_string\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Stage Type List",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/stage-types/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "stage-types"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": ""
+                },
+                {
+                  "key": "search",
+                  "value": "example_string",
+                  "description": ""
+                },
+                {
+                  "key": "sortBy",
+                  "value": "stage_type",
+                  "description": ""
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "asc",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Stage Type Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/stage-types/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "stage-types",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Stage Type",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/stage-types/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "stage-types",
+                "{{id}}"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"stage_type\": 1,\n  \"name\": \"example_string\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Stage Type",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/stage-types/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "stage-types",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Project Workflows",
+      "item": [
+        {
+          "name": "Create Project Workflow",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/project-workflows/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "project-workflows"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Project Workflow List",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/project-workflows/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "project-workflows"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": ""
+                },
+                {
+                  "key": "business_type_id",
+                  "value": "1",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Patch Project Workflow Reorder",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/project-workflows/reorder",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "project-workflows",
+                "reorder"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Project Workflow Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/project-workflows/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "project-workflows",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Project Workflow",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/project-workflows/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "project-workflows",
+                "{{id}}"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"stage_id\": 1,\n  \"sequence\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Project Workflow",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/project-workflows/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "project-workflows",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Project Workflow Business Type",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/project-workflows/business-type/{{businessTypeId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "project-workflows",
+                "business-type",
+                "{{businessTypeId}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Project Workflow Dropdown",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/project-workflows/dropdown/{{businessTypeId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "project-workflows",
+                "dropdown",
+                "{{businessTypeId}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Document Types",
+      "item": [
+        {
+          "name": "Get Document Type Dropdown",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/document-types/dropdown",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "document-types",
+                "dropdown"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Document Type",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/document-types/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "document-types"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"document_type\": 1,\n  \"name\": \"example_string\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Document Type List",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/document-types/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "document-types"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": ""
+                },
+                {
+                  "key": "search",
+                  "value": "example_string",
+                  "description": ""
+                },
+                {
+                  "key": "sortBy",
+                  "value": "document_type",
+                  "description": ""
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "asc",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Document Type Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/document-types/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "document-types",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Document Type",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/document-types/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "document-types",
+                "{{id}}"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"document_type\": 1,\n  \"name\": \"example_string\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Document Type",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/document-types/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "document-types",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Stage Files",
+      "item": [
+        {
+          "name": "Get Stage File Project Stages",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/stage-files/project-stages/{{projectStageId}}/files",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "stage-files",
+                "project-stages",
+                "{{projectStageId}}",
+                "files"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Upload Stage File",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/stage-files/upload",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "stage-files",
+                "upload"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Stage File List",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/stage-files/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "stage-files"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": ""
+                },
+                {
+                  "key": "project_stage_id",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "document_type_id",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "uploaded_by",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "search",
+                  "value": "example_string",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Stage File Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/stage-files/stats",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "stage-files",
+                "stats"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Stage File Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/stage-files/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "stage-files",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Stage File",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/stage-files/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "stage-files",
+                "{{id}}"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"document_type_id\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Stage File",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/stage-files/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "stage-files",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Stage File Preview",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/stage-files/{{id}}/preview",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "stage-files",
+                "{{id}}",
+                "preview"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Stage File Download",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/stage-files/{{id}}/download",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "stage-files",
+                "{{id}}",
+                "download"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Stage Approvals",
+      "item": [
+        {
+          "name": "Get Stage Approval Project Stages",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/stage-approvals/project-stages/{{projectStageId}}/approvals",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "stage-approvals",
+                "project-stages",
+                "{{projectStageId}}",
+                "approvals"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Stage Approval Project Stages",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/stage-approvals/project-stages/{{projectStageId}}/approval-timeline",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "stage-approvals",
+                "project-stages",
+                "{{projectStageId}}",
+                "approval-timeline"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Stage Approval",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/stage-approvals/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "stage-approvals"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"project_stage_id\": 1,\n  \"approval_status\": \"PENDING\",\n  \"remarks\": \"example_string\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Stage Approval List",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/stage-approvals/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "stage-approvals"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": ""
+                },
+                {
+                  "key": "project_stage_id",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "approval_status",
+                  "value": "PENDING",
+                  "description": ""
+                },
+                {
+                  "key": "approved_by",
+                  "value": "1",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Stage Approval Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/stage-approvals/stats",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "stage-approvals",
+                "stats"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Stage Approval Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/stage-approvals/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "stage-approvals",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Stage Approval",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/stage-approvals/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "stage-approvals",
+                "{{id}}"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"approval_status\": \"PENDING\",\n  \"remarks\": \"example_string\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Stage Approval",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/stage-approvals/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "stage-approvals",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Stage Approval Approve",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/stage-approvals/{{id}}/approve",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "stage-approvals",
+                "{{id}}",
+                "approve"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Stage Approval Reject",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/stage-approvals/{{id}}/reject",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "stage-approvals",
+                "{{id}}",
+                "reject"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"remarks\": \"example_string\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Roles",
+      "item": [
+        {
+          "name": "Create Role",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/roles/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "roles"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"example_string\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Role List",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/roles/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "roles"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": ""
+                },
+                {
+                  "key": "search",
+                  "value": "example_string",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Role Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/roles/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "roles",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Role",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/roles/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "roles",
+                "{{id}}"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"example_string\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Role",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/roles/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "roles",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Channel Partners",
+      "item": [
+        {
+          "name": "Create Channel Partner",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/channel-partners/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "channel-partners"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"example_string\",\n  \"contact_person\": \"example_string\",\n  \"phone\": \"example_string\",\n  \"email\": \"admin@example.com\",\n  \"address\": \"example_string\",\n  \"gst_number\": \"example_string\",\n  \"opening_balance\": 1,\n  \"credit_limit\": 1,\n  \"payment_due_days\": 1,\n  \"notes\": \"example_string\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Channel Partner List",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/channel-partners/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "channel-partners"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "example_string",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "example_string",
+                  "description": ""
+                },
+                {
+                  "key": "search",
+                  "value": "example_string",
+                  "description": ""
+                },
+                {
+                  "key": "is_active",
+                  "value": "true",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Channel Partner Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/channel-partners/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "channel-partners",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Channel Partner",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/channel-partners/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "channel-partners",
+                "{{id}}"
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"example_string\",\n  \"contact_person\": \"example_string\",\n  \"phone\": \"example_string\",\n  \"email\": \"admin@example.com\",\n  \"address\": \"example_string\",\n  \"gst_number\": \"example_string\",\n  \"opening_balance\": 1,\n  \"credit_limit\": 1,\n  \"payment_due_days\": 1,\n  \"notes\": \"example_string\",\n  \"is_active\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Channel Partner",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Authorization header"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/channel-partners/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "channel-partners",
+                "{{id}}"
+              ],
+              "query": []
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Get Health List",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "health"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Core",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": []
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5001",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "YOUR_JWT_TOKEN",
+      "type": "string"
+    }
+  ]
 }
