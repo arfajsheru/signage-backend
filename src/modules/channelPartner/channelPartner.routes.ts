@@ -1,7 +1,6 @@
 import { FastifyInstance } from "fastify";
 import { ChannelPartnerController } from "./channelPartner.controller.js";
 import { ChannelPartnerService } from "./channelPartner.service.js";
-import { authenticate } from "../../middlewares/auth.middleware.js";
 import {
   createChannelPartnerSchema,
   updateChannelPartnerSchema,
@@ -14,7 +13,15 @@ export default async function channelPartnerRoutes(fastify: FastifyInstance) {
 
   fastify.post("/", { schema: createChannelPartnerSchema }, controller.create);
   fastify.get("/", { schema: channelPartnerQuerySchema }, controller.getAll);
+  
+
+  fastify.get("/list", controller.getDropdown);
+  
   fastify.get("/:id", controller.getOne);
-  fastify.put("/:id", { schema: updateChannelPartnerSchema }, controller.update);
+  fastify.put(
+    "/:id",
+    { schema: updateChannelPartnerSchema },
+    controller.update,
+  );
   fastify.delete("/:id", controller.delete);
 }

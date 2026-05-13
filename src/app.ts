@@ -4,18 +4,7 @@ import swagger from "@fastify/swagger";
 import swaggerUi from "@fastify/swagger-ui";
 import prismaPlugin from "./plugins/prisma.js";
 import multipart from "@fastify/multipart";
-import vendorRoutes from "./modules/vendor/vendor.routes.js";
-import userRoutes from "./modules/user/user.routes.js";
-import businessTypeRoutes from "./modules/businessType/businessType.routes.js";
-import projectRoutes from "./modules/project/project.routes.js";
-import projectAssignmentRoutes from "./modules/projectAssignment/projectAssignment.routes.js";
-import stageTypeMasterRoutes from "./modules/stageTypeMaster/stageTypeMaster.routes.js";
-import projectWorkflowRoutes from "./modules/projectWorkflow/projectWorkflow.routes.js";
-import documentTypeRoutes from "./modules/documentType/documentType.routes.js";
-import stageFileRoutes from "./modules/stageFile/stageFile.routes.js";
-import stageApprovalRoutes from "./modules/stageApproval/stageApproval.routes.js";
-import roleRoutes from "./modules/role/role.routes.js";
-import channelPartnerRoutes from "./modules/channelPartner/channelPartner.routes.js";
+import appRoutes from "./routes/index.js";
 import { errorResponse } from "./utils/response.js";
 import { AppError } from "./utils/errors.js";
 
@@ -24,7 +13,7 @@ export const buildApp = async () => {
     logger: true,
   });
 
-  // 1. Register Swagger (BEFORE routes)
+  // 1. Swagger Configuration
   await app.register(swagger, {
     openapi: {
       info: {
@@ -53,49 +42,31 @@ export const buildApp = async () => {
   app.setErrorHandler((error: any, request, reply) => {
     app.log.error(error);
 
-    // If it's our custom AppError
     if (error instanceof AppError) {
       return reply.status(error.statusCode).send(errorResponse(error.message));
     }
 
-    // Default Error
     const statusCode = error.statusCode || 500;
     const message = statusCode >= 500 ? "Internal Server Error" : error.message;
 
-    reply
-      .status(statusCode)
-      .send(
-        errorResponse(
-          message,
-          process.env.NODE_ENV === "development" ? error.stack : undefined,
-        ),
-      );
+    reply.status(statusCode).send(
+      errorResponse(
+        message,
+        process.env.NODE_ENV === "development" ? error.stack : undefined,
+      ),
+    );
   });
 
-  // 4. Routes
-  await app.register(vendorRoutes, { prefix: "/vendors" });
-  await app.register(userRoutes, { prefix: "/users" });
-  await app.register(businessTypeRoutes, { prefix: "/business-types" });
-  await app.register(projectRoutes, { prefix: "/projects" });
-  await app.register(projectAssignmentRoutes, {
-    prefix: "/project-assignments",
-  });
-  await app.register(stageTypeMasterRoutes, { prefix: "/stage-types" });
-  await app.register(projectWorkflowRoutes, { prefix: "/project-workflows" });
-  await app.register(documentTypeRoutes, { prefix: "/document-types" });
-  await app.register(stageFileRoutes, { prefix: "/stage-files" });
-  await app.register(stageApprovalRoutes, { prefix: "/stage-approvals" });
-  await app.register(roleRoutes, { prefix: "/roles" });
-  await app.register(channelPartnerRoutes, { prefix: "/channel-partners" });
+  // 4. Centralized Routes with api/v1 prefix
+  // Isse ab saare routes /api/v1/... se start honge
+  await app.register(appRoutes, { prefix: "/api/v1" });
 
-  app.get("/health", async () => {
-    return { status: "OK", timestamp: new Date().toISOString() };
-  });
-
+  // Root Welcome Route (Always visible at http://localhost:5001/)
   app.get("/", async () => {
     return {
       success: true,
       message: "🚀 Signage Backend is LIVE bro!",
+      api_base: "/api/v1",
       docs: "/docs",
       time: new Date().toLocaleTimeString(),
     };

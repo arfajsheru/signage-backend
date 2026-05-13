@@ -18,7 +18,7 @@ model Vendor {
   gst_number      String?
   pan_number      String?
 
-  opening_balance Decimal  @default(0)
+  opening_balance Float    @default(0)
 
   is_active       Boolean  @default(true)
 
@@ -101,8 +101,8 @@ model ChannelPartner {
 
   // Financial info
   gst_number      String?
-  opening_balance Decimal @default(0)
-  credit_limit    Decimal @default(0)
+  opening_balance Float   @default(0)
+  credit_limit    Float   @default(0)
 
   // Payment terms
   payment_due_days Int?
@@ -142,10 +142,6 @@ model BusinessType {
 model StageTypeMaster {
   id Int @id @default(autoincrement())
 
-  // Example:
-  // 1 = CREATED
-  // 2 = DESIGNING
-
   stage_type Int    @unique
   name       String @unique
 
@@ -155,6 +151,8 @@ model StageTypeMaster {
   workflows ProjectWorkflow[]
 
   project_stages ProjectStage[]
+
+  current_projects Project[] @relation("CurrentProjectStage")
 }
 
 model Project {
@@ -168,7 +166,7 @@ model Project {
   business_type_id Int
   business_type    BusinessType @relation(fields: [business_type_id], references: [id])
 
-  // Channel partner relation (null = direct project, set = referred project)
+  // Channel partner relation
   channel_partner_id Int?
   channel_partner    ChannelPartner? @relation(fields: [channel_partner_id], references: [id])
 
@@ -176,20 +174,41 @@ model Project {
   name        String
   description String?
 
-  // Project status
+  // =========================
+  // PROJECT LIVE STATUS
+  // =========================
+
+  // Overall project status
   status ProjectStatus @default(CREATED)
 
-  // Financial info
-  total_amount  Decimal?
-  advance_paid  Decimal  @default(0)
+  // Current running stage
+  current_stage_id Int?
+
+  current_stage StageTypeMaster? @relation("CurrentProjectStage", fields: [current_stage_id], references: [id])
+
+  // Current stage execution status
+  current_stage_status StageStatus?
+
+  // Optional future analytics
+  progress_percentage Float @default(0)
+
+  last_stage_updated_at DateTime?
+
+  // =========================
+  // FINANCIAL INFO
+  // =========================
+
+  total_amount Float?
+
+  advance_paid Float @default(0)
 
   deadline DateTime?
 
   // Created by
   created_by      Int
-  created_by_user User   @relation("ProjectCreatedBy", fields: [created_by], references: [id])
+  created_by_user User @relation("ProjectCreatedBy", fields: [created_by], references: [id])
 
-  is_active  Boolean  @default(true)
+  is_active Boolean @default(true)
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
@@ -203,6 +222,10 @@ model Project {
   @@index([business_type_id])
   @@index([channel_partner_id])
   @@index([created_by])
+
+  // Important for dashboard filtering
+  @@index([current_stage_id])
+  @@index([status])
 }
 
 model ProjectAssignment {

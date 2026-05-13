@@ -78,4 +78,15 @@ export class ChannelPartnerService {
       data: { is_active: false },
     });
   }
+
+  // Naya method pura data fetch karne ke liye based on vendorId
+  async findAllForVendor(vendorId: number) {
+    return this.prisma.channelPartner.findMany({
+      where: { 
+        vendor_id: vendorId,
+        is_active: true 
+      },
+      orderBy: { name: "asc" },
+    });
+  }
 }

@@ -13,7 +13,7 @@ export default async function stageTypeMasterRoutes(fastify: FastifyInstance) {
   const controller = new StageTypeMasterController(service);
 
   // Dropdown should be accessible (maybe authenticated but without strict role?)
-  fastify.get('/dropdown', controller.getDropdown);
+  fastify.get('/stage-types', controller.getDropdown);
 
   fastify.post('/', { schema: createStageTypeSchema }, controller.create);
   fastify.get('/', { schema: stageTypeQuerySchema }, controller.getAll);

@@ -12,7 +12,12 @@ export class ChannelPartnerController {
   constructor(private service: ChannelPartnerService) {}
 
   private getVendorId(request: FastifyRequest) {
-    const vendorId = request.user?.vendor_id || (request.body as any)?.vendor_id || (request.query as any)?.vendor_id || 1;
+    const vendorId =
+      request.user?.vendor_id ||
+      (request.params as any)?.vendor_id ||
+      (request.body as any)?.vendor_id ||
+      (request.query as any)?.vendor_id ||
+      1;
     return Number(vendorId);
   }
 
@@ -82,6 +87,15 @@ export class ChannelPartnerController {
     await this.service.delete(vendorId, Number(request.params.id));
     return reply.send(
       successResponse(null, "Channel Partner deleted successfully")
+    );
+  };
+
+  // Naya method vendor_id ke basis pe sab data lane ke liye
+  getDropdown = async (request: FastifyRequest, reply: FastifyReply) => {
+    const vendorId = this.getVendorId(request);
+    const result = await this.service.findAllForVendor(vendorId);
+    return reply.send(
+      successResponse(result, "Channel Partner list retrieved successfully")
     );
   };
 }
