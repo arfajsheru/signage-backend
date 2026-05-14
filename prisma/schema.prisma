@@ -7,23 +7,23 @@ datasource db {
 }
 
 model Vendor {
-  id              Int      @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-  name            String
-  contact_person  String?
-  phone           String?
-  email           String?
-  address         String?
+  name           String
+  contact_person String?
+  phone          String?
+  email          String?
+  address        String?
 
-  gst_number      String?
-  pan_number      String?
+  gst_number String?
+  pan_number String?
 
-  opening_balance Float    @default(0)
+  opening_balance Float @default(0)
 
-  is_active       Boolean  @default(true)
+  is_active Boolean @default(true)
 
-  created_at      DateTime @default(now())
-  updated_at      DateTime @updatedAt
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
   // Relations
   users            User[]
@@ -34,9 +34,9 @@ model Vendor {
 }
 
 model Role {
-  id         Int      @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-  name       String   @unique
+  name String @unique
 
   created_at DateTime @default(now())
 
@@ -53,7 +53,7 @@ model User {
 
   // Role relation
   role_id Int
-  role    Role   @relation(fields: [role_id], references: [id])
+  role    Role @relation(fields: [role_id], references: [id])
 
   // Basic info
   name     String
@@ -137,12 +137,15 @@ model BusinessType {
   workflows ProjectWorkflow[]
 
   projects Project[]
+
+  categories ProjectCategory[]
 }
 
 model StageTypeMaster {
   id Int @id @default(autoincrement())
 
   stage_type Int    @unique
+  code       String? @unique
   name       String @unique
 
   created_at DateTime @default(now())
@@ -158,45 +161,44 @@ model StageTypeMaster {
 model Project {
   id Int @id @default(autoincrement())
 
-  // Vendor relation
   vendor_id Int
   vendor    Vendor @relation(fields: [vendor_id], references: [id])
 
-  // Business type relation
   business_type_id Int
   business_type    BusinessType @relation(fields: [business_type_id], references: [id])
 
-  // Channel partner relation
   channel_partner_id Int?
-  channel_partner    ChannelPartner? @relation(fields: [channel_partner_id], references: [id])
 
-  // Basic project info
-  name        String
-  description String?
+  channel_partner ChannelPartner? @relation(fields: [channel_partner_id], references: [id])
+  project_code    String
+  name            String
 
-  // =========================
-  // PROJECT LIVE STATUS
-  // =========================
+  client_name  String
+  client_phone String?
+  client_email String?
 
-  // Overall project status
+  site_address String?
+
+  site_map_link String?
+
+  project_category_id Int?
+  project_category    ProjectCategory? @relation(fields: [project_category_id], references: [id])
+
+  notes String?
+
+  priority ProjectPriority @default(MEDIUM)
+
   status ProjectStatus @default(CREATED)
 
-  // Current running stage
   current_stage_id Int?
 
   current_stage StageTypeMaster? @relation("CurrentProjectStage", fields: [current_stage_id], references: [id])
 
-  // Current stage execution status
   current_stage_status StageStatus?
 
-  // Optional future analytics
   progress_percentage Float @default(0)
 
   last_stage_updated_at DateTime?
-
-  // =========================
-  // FINANCIAL INFO
-  // =========================
 
   total_amount Float?
 
@@ -204,8 +206,8 @@ model Project {
 
   deadline DateTime?
 
-  // Created by
-  created_by      Int
+  created_by Int
+
   created_by_user User @relation("ProjectCreatedBy", fields: [created_by], references: [id])
 
   is_active Boolean @default(true)
@@ -213,7 +215,6 @@ model Project {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  // Relations
   assignments ProjectAssignment[]
 
   stages ProjectStage[]
@@ -222,10 +223,15 @@ model Project {
   @@index([business_type_id])
   @@index([channel_partner_id])
   @@index([created_by])
-
-  // Important for dashboard filtering
   @@index([current_stage_id])
   @@index([status])
+  @@index([priority])
+  @@index([project_code])
+  @@index([client_name])
+  @@index([project_category_id])
+  @@index([deadline])
+
+  @@unique([vendor_id, project_code])
 }
 
 model ProjectAssignment {
@@ -237,7 +243,7 @@ model ProjectAssignment {
 
   // User relation
   user_id Int
-  user    User   @relation(fields: [user_id], references: [id])
+  user    User @relation(fields: [user_id], references: [id])
 
   assigned_at DateTime @default(now())
 
@@ -262,6 +268,7 @@ model ProjectWorkflow {
   created_at DateTime @default(now())
 
   @@unique([business_type_id, sequence])
+  @@unique([business_type_id, stage_id])
 }
 
 model ProjectStage {
@@ -285,7 +292,7 @@ model ProjectStage {
 
   // Created by
   created_by   Int
-  created_user User   @relation(fields: [created_by], references: [id])
+  created_user User @relation(fields: [created_by], references: [id])
 
   created_at DateTime @default(now())
 
@@ -295,6 +302,8 @@ model ProjectStage {
   approvals StageApproval[]
 
   @@index([project_id])
+  @@index([stage_id])
+  @@index([status])
 }
 
 model DocumentType {
@@ -330,7 +339,7 @@ model StageFile {
 
   // Uploaded by
   uploaded_by   Int
-  uploaded_user User   @relation(fields: [uploaded_by], references: [id])
+  uploaded_user User @relation(fields: [uploaded_by], references: [id])
 
   created_at DateTime @default(now())
 
@@ -352,11 +361,14 @@ model StageApproval {
 
   // Approved by
   approved_by   Int?
-  approved_user User?   @relation(fields: [approved_by], references: [id])
+  approved_user User? @relation(fields: [approved_by], references: [id])
 
   approved_at DateTime?
 
   created_at DateTime @default(now())
+
+  @@index([project_stage_id])
+  @@index([approval_status])
 }
 
 enum ProjectStatus {
@@ -375,8 +387,39 @@ enum StageStatus {
   REJECTED
 }
 
+
+model ProjectCategory {
+  id Int @id @default(autoincrement())
+
+  business_type_id Int
+
+  business_type BusinessType @relation(fields: [business_type_id], references: [id])
+
+  category_name String
+
+  is_active Boolean @default(true)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  projects Project[]
+
+  @@index([business_type_id])
+
+  @@index([category_name])
+
+  @@unique([business_type_id, category_name])
+}
+
 enum ApprovalStatus {
   PENDING
   APPROVED
   REJECTED
+}
+
+enum ProjectPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
 }
