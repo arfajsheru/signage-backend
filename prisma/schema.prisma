@@ -173,9 +173,11 @@ model Project {
   project_code    String
   name            String
 
-  client_name  String
+  client_name  String?
   client_phone String?
   client_email String?
+
+  project_source ProjectSource @default(DIRECT)
 
   site_address String?
 
@@ -230,6 +232,7 @@ model Project {
   @@index([client_name])
   @@index([project_category_id])
   @@index([deadline])
+  @@index([project_source])
 
   @@unique([vendor_id, project_code])
 }
@@ -422,4 +425,9 @@ enum ProjectPriority {
   MEDIUM
   HIGH
   URGENT
+}
+
+enum ProjectSource {
+  DIRECT
+  CHANNEL_PARTNER
 }

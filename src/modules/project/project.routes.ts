@@ -14,8 +14,8 @@ export default async function projectRoutes(fastify: FastifyInstance) {
   const controller = new ProjectController(service);
 
   // Core Project APIs
-  fastify.post('/', { schema: createProjectSchema }, controller.create);
-  fastify.get('/', { schema: projectQuerySchema }, controller.getAll);
+  fastify.post('/create-project', { schema: createProjectSchema }, controller.create);
+  fastify.get('/project-list', { schema: projectQuerySchema }, controller.getAll);
   fastify.get('/stats', controller.getStats);
   fastify.get('/search', controller.search);
   

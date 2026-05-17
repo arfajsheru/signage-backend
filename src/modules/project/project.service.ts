@@ -1,4 +1,4 @@
-import { PrismaClient, ProjectStatus } from "@prisma/client";
+import { PrismaClient, ProjectStatus, ProjectSource } from "@prisma/client";
 import {
   CreateProjectInput,
   UpdateProjectInput,
@@ -11,11 +11,52 @@ export class ProjectService {
   constructor(private prisma: PrismaClient) {}
 
   async create(vendorId: number, userId: number, data: CreateProjectInput) {
+    // Validate project source and required fields based on it
+    const projectSource = data.project_source || "DIRECT";
+    if (projectSource === "DIRECT") {
+      if (!data.client_name || !data.client_name.trim()) {
+        throw new ValidationError("Client name is required for direct projects");
+      }
+    } else if (projectSource === "CHANNEL_PARTNER") {
+      if (!data.channel_partner_id) {
+        throw new ValidationError("Channel partner is required for channel partner projects");
+      }
+    }
+
     // 1. Validate Business Type
     const businessType = await this.prisma.businessType.findUnique({
       where: { id: data.business_type_id },
     });
     if (!businessType) throw new ValidationError("Invalid business type");
+
+    // Get Vendor for project code generation
+    const vendor = await this.prisma.vendor.findUnique({
+      where: { id: vendorId },
+    });
+    if (!vendor) throw new ValidationError("Vendor not found");
+
+    // Auto-generate project code if not provided
+    let projectCode = data.project_code;
+    if (!projectCode) {
+      const vendorPrefix = vendor.name.substring(0, 3).toUpperCase();
+      const randomNumber = Math.floor(1000 + Math.random() * 9000);
+      projectCode = `${vendorPrefix}-${randomNumber}`;
+      
+      // Ensure uniqueness
+      let isUnique = false;
+      let attempts = 0;
+      while (!isUnique && attempts < 5) {
+        const existing = await this.prisma.project.findUnique({
+          where: { vendor_id_project_code: { vendor_id: vendorId, project_code: projectCode } },
+        });
+        if (!existing) {
+          isUnique = true;
+        } else {
+          projectCode = `${vendorPrefix}-${Math.floor(1000 + Math.random() * 9000)}`;
+          attempts++;
+        }
+      }
+    }
 
     // 2. Validate Channel Partner (if provided)
     if (data.channel_partner_id) {
@@ -26,9 +67,24 @@ export class ProjectService {
         throw new ValidationError("Invalid channel partner for this vendor");
     }
 
+    // 3. Validate Project Category (if provided)
+    if (data.project_category_id) {
+      const category = await this.prisma.projectCategory.findFirst({
+        where: { id: data.project_category_id, business_type_id: data.business_type_id },
+      });
+      if (!category) throw new ValidationError("Invalid project category for this business type");
+    }
+
+    // 4. Validate Project Code uniqueness
+    const existingProject = await this.prisma.project.findUnique({
+      where: { vendor_id_project_code: { vendor_id: vendorId, project_code: projectCode } },
+    });
+    if (existingProject) throw new ValidationError("Project code already exists");
+
     return this.prisma.project.create({
       data: {
         ...data,
+        project_code: projectCode,
         vendor_id: vendorId,
         created_by: userId,
         status: ProjectStatus.CREATED,
@@ -40,6 +96,7 @@ export class ProjectService {
       include: {
         business_type: true,
         channel_partner: true,
+        project_category: true,
         created_by_user: {
           select: { id: true, name: true, email: true },
         },
@@ -63,14 +120,27 @@ export class ProjectService {
     if (filters.channel_partner_id)
       where.channel_partner_id = filters.channel_partner_id;
     if (filters.created_by) where.created_by = filters.created_by;
+    if (filters.project_category_id)
+      where.project_category_id = filters.project_category_id;
+    if (filters.priority) where.priority = filters.priority;
+    if (filters.project_source) where.project_source = filters.project_source;
 
     if (filters.search) {
       where.OR = [
         { name: { contains: filters.search, mode: "insensitive" } },
-        { description: { contains: filters.search, mode: "insensitive" } },
+        { project_code: { contains: filters.search, mode: "insensitive" } },
+        { client_name: { contains: filters.search, mode: "insensitive" } },
+        { client_phone: { contains: filters.search, mode: "insensitive" } },
+        { site_address: { contains: filters.search, mode: "insensitive" } },
+        { notes: { contains: filters.search, mode: "insensitive" } },
         {
           business_type: {
             name: { contains: filters.search, mode: "insensitive" },
+          },
+        },
+        {
+          project_category: {
+            category_name: { contains: filters.search, mode: "insensitive" },
           },
         },
         {
@@ -97,6 +167,8 @@ export class ProjectService {
         include: {
           business_type: true,
           channel_partner: true,
+          project_category: true,
+          current_stage: true,
           created_by_user: {
             select: { id: true, name: true, email: true },
           },
@@ -117,6 +189,8 @@ export class ProjectService {
       include: {
         business_type: true,
         channel_partner: true,
+        project_category: true,
+        current_stage: true,
         created_by_user: {
           select: { id: true, name: true, email: true },
         },
@@ -146,6 +220,8 @@ export class ProjectService {
       include: {
         business_type: true,
         channel_partner: true,
+        project_category: true,
+        current_stage: true,
         created_by_user: {
           select: { id: true, name: true, email: true },
         },
@@ -184,6 +260,20 @@ export class ProjectService {
   async update(vendorId: number, id: number, data: UpdateProjectInput) {
     const existing = await this.findById(vendorId, id);
 
+    // Validate project source rules if changing source, client_name, or channel_partner_id
+    const projectSource = data.project_source || existing.project_source;
+    if (projectSource === "DIRECT") {
+      const clientName = data.client_name !== undefined ? data.client_name : existing.client_name;
+      if (!clientName || !clientName.trim()) {
+        throw new ValidationError("Client name is required for direct projects");
+      }
+    } else if (projectSource === "CHANNEL_PARTNER") {
+      const channelPartnerId = data.channel_partner_id !== undefined ? data.channel_partner_id : existing.channel_partner_id;
+      if (!channelPartnerId) {
+        throw new ValidationError("Channel partner is required for channel partner projects");
+      }
+    }
+
     // Validate Business Type if changing
     if (data.business_type_id) {
       const businessType = await this.prisma.businessType.findUnique({
@@ -201,6 +291,26 @@ export class ProjectService {
         throw new ValidationError("Invalid channel partner for this vendor");
     }
 
+    // Validate Project Category if changing
+    if (data.project_category_id) {
+      const category = await this.prisma.projectCategory.findFirst({
+        where: {
+          id: data.project_category_id,
+          business_type_id: data.business_type_id || existing.business_type_id,
+        },
+      });
+      if (!category)
+        throw new ValidationError("Invalid project category for this business type");
+    }
+
+    // Validate Project Code uniqueness if changing
+    if (data.project_code && data.project_code !== existing.project_code) {
+      const existingProject = await this.prisma.project.findUnique({
+        where: { vendor_id_project_code: { vendor_id: vendorId, project_code: data.project_code } },
+      });
+      if (existingProject) throw new ValidationError("Project code already exists");
+    }
+
     return this.prisma.project.update({
       where: { id },
       data: {
@@ -210,6 +320,7 @@ export class ProjectService {
       include: {
         business_type: true,
         channel_partner: true,
+        project_category: true,
       },
     });
   }
@@ -237,6 +348,8 @@ export class ProjectService {
         is_active: true,
         OR: [
           { name: { contains: query, mode: "insensitive" } },
+          { project_code: { contains: query, mode: "insensitive" } },
+          { client_name: { contains: query, mode: "insensitive" } },
           { business_type: { name: { contains: query, mode: "insensitive" } } },
           {
             channel_partner: { name: { contains: query, mode: "insensitive" } },
@@ -246,6 +359,7 @@ export class ProjectService {
       include: {
         business_type: true,
         channel_partner: true,
+        project_category: true,
       },
       take: 20,
     });
