@@ -1,6 +1,12 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { ProjectService } from './project.service.js';
-import { CreateProjectInput, UpdateProjectInput, ProjectQueryFilters } from './project.types.js';
+import { 
+  CreateProjectInput, 
+  UpdateProjectInput, 
+  ProjectQueryFilters,
+  CreateProjectCategoryInput,
+  ProjectCategoryQueryFilters
+} from './project.types.js';
 import { ProjectStatus } from '@prisma/client';
 
 import { successResponse } from '../../utils/response.js';
@@ -70,5 +76,28 @@ export class ProjectController {
     const { vendorId } = this.getContext(request);
     const result = await this.service.getStats(vendorId);
     return reply.send(successResponse(result, 'Project statistics retrieved successfully'));
+  };
+
+  // --- Project Category ---
+
+  getProjectCategories = async (
+    request: FastifyRequest<{ 
+      Params: { business_type_id: number }; 
+      Querystring: { search?: string } 
+    }>, 
+    reply: FastifyReply
+  ) => {
+    const businessTypeId = Number(request.params.business_type_id);
+    const result = await this.service.getProjectCategories({
+      business_type_id: businessTypeId,
+      search: request.query.search,
+    });
+    return reply.send(successResponse(result, 'Project categories retrieved successfully'));
+  };
+
+  createProjectCategory = async (request: FastifyRequest<{ Body: CreateProjectCategoryInput | CreateProjectCategoryInput[] }>, reply: FastifyReply) => {
+    const result = await this.service.createProjectCategory(request.body);
+    const message = Array.isArray(request.body) ? 'Project categories created successfully' : 'Project category created successfully';
+    return reply.status(201).send(successResponse(result, message));
   };
 }

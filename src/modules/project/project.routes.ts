@@ -6,7 +6,9 @@ import {
   createProjectSchema, 
   updateProjectSchema, 
   updateProjectStatusSchema, 
-  projectQuerySchema 
+  projectQuerySchema,
+  createProjectCategorySchema,
+  projectCategoryQuerySchema
 } from './project.schema.js';
 
 export default async function projectRoutes(fastify: FastifyInstance) {
@@ -18,6 +20,10 @@ export default async function projectRoutes(fastify: FastifyInstance) {
   fastify.get('/project-list', { schema: projectQuerySchema }, controller.getAll);
   fastify.get('/stats', controller.getStats);
   fastify.get('/search', controller.search);
+
+  // Project Category APIs
+  fastify.post('/create-category', { schema: createProjectCategorySchema }, controller.createProjectCategory);
+  fastify.get('/category-list/:business_type_id', { schema: projectCategoryQuerySchema }, controller.getProjectCategories);
   
   // Single Project APIs
   fastify.get('/:id', controller.getOne);

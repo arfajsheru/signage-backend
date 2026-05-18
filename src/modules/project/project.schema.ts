@@ -87,3 +87,41 @@ export const projectQuerySchema = {
     }
   }
 };
+
+const projectCategoryObject = {
+  type: 'object',
+  required: ['business_type_id', 'category_name'],
+  properties: {
+    business_type_id: { type: 'integer' },
+    category_name: { type: 'string', minLength: 1, maxLength: 255 }
+  }
+};
+
+export const createProjectCategorySchema = {
+  body: {
+    anyOf: [
+      projectCategoryObject,
+      {
+        type: 'array',
+        items: projectCategoryObject,
+        minItems: 1
+      }
+    ]
+  }
+};
+
+export const projectCategoryQuerySchema = {
+  params: {
+    type: 'object',
+    required: ['business_type_id'],
+    properties: {
+      business_type_id: { type: 'integer' }
+    }
+  },
+  querystring: {
+    type: 'object',
+    properties: {
+      search: { type: 'string' }
+    }
+  }
+};

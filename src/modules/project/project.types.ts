@@ -62,3 +62,13 @@ export interface ProjectStats {
   signage: number;
   print: number;
 }
+
+export interface CreateProjectCategoryInput {
+  business_type_id: number;
+  category_name: string;
+}
+
+export interface ProjectCategoryQueryFilters {
+  business_type_id?: number;
+  search?: string;
+}

@@ -4,6 +4,8 @@ import {
   UpdateProjectInput,
   ProjectQueryFilters,
   ProjectStats,
+  CreateProjectCategoryInput,
+  ProjectCategoryQueryFilters,
 } from "./project.types.js";
 import { NotFoundError, ValidationError } from "../../utils/errors.js";
 
@@ -59,18 +61,20 @@ export class ProjectService {
     }
 
     // 2. Validate Channel Partner (if provided)
-    if (data.channel_partner_id) {
+    const channelPartnerId = data.channel_partner_id && data.channel_partner_id > 0 ? data.channel_partner_id : null;
+    if (channelPartnerId) {
       const partner = await this.prisma.channelPartner.findFirst({
-        where: { id: data.channel_partner_id, vendor_id: vendorId },
+        where: { id: channelPartnerId, vendor_id: vendorId },
       });
       if (!partner)
         throw new ValidationError("Invalid channel partner for this vendor");
     }
 
     // 3. Validate Project Category (if provided)
-    if (data.project_category_id) {
+    const projectCategoryId = data.project_category_id && data.project_category_id > 0 ? data.project_category_id : null;
+    if (projectCategoryId) {
       const category = await this.prisma.projectCategory.findFirst({
-        where: { id: data.project_category_id, business_type_id: data.business_type_id },
+        where: { id: projectCategoryId, business_type_id: data.business_type_id },
       });
       if (!category) throw new ValidationError("Invalid project category for this business type");
     }
@@ -84,6 +88,8 @@ export class ProjectService {
     return this.prisma.project.create({
       data: {
         ...data,
+        channel_partner_id: channelPartnerId,
+        project_category_id: projectCategoryId,
         project_code: projectCode,
         vendor_id: vendorId,
         created_by: userId,
@@ -283,19 +289,21 @@ export class ProjectService {
     }
 
     // Validate Channel Partner if changing
-    if (data.channel_partner_id) {
+    const channelPartnerId = data.channel_partner_id !== undefined ? (data.channel_partner_id && data.channel_partner_id > 0 ? data.channel_partner_id : null) : undefined;
+    if (channelPartnerId) {
       const partner = await this.prisma.channelPartner.findFirst({
-        where: { id: data.channel_partner_id, vendor_id: vendorId },
+        where: { id: channelPartnerId, vendor_id: vendorId },
       });
       if (!partner)
         throw new ValidationError("Invalid channel partner for this vendor");
     }
 
     // Validate Project Category if changing
-    if (data.project_category_id) {
+    const projectCategoryId = data.project_category_id !== undefined ? (data.project_category_id && data.project_category_id > 0 ? data.project_category_id : null) : undefined;
+    if (projectCategoryId) {
       const category = await this.prisma.projectCategory.findFirst({
         where: {
-          id: data.project_category_id,
+          id: projectCategoryId,
           business_type_id: data.business_type_id || existing.business_type_id,
         },
       });
@@ -315,6 +323,8 @@ export class ProjectService {
       where: { id },
       data: {
         ...data,
+        channel_partner_id: channelPartnerId,
+        project_category_id: projectCategoryId,
         deadline: data.deadline ? new Date(data.deadline) : undefined,
       },
       include: {
@@ -412,5 +422,94 @@ export class ProjectService {
       ]);
 
     return { total, active, completed, delayed, signage, print };
+  }
+
+  // --- Project Category APIs ---
+
+  async getProjectCategories(filters: ProjectCategoryQueryFilters) {
+    const where: any = {
+      is_active: true,
+    };
+
+    if (filters.business_type_id) {
+      where.business_type_id = filters.business_type_id;
+    }
+
+    if (filters.search) {
+      where.category_name = { contains: filters.search, mode: "insensitive" };
+    }
+
+    return this.prisma.projectCategory.findMany({
+      where,
+      include: {
+        business_type: true,
+      },
+      orderBy: { category_name: "asc" },
+    });
+  }
+
+  async createProjectCategory(data: CreateProjectCategoryInput | CreateProjectCategoryInput[]) {
+    if (Array.isArray(data)) {
+      // Validate all business types first
+      const businessTypeIds = [...new Set(data.map(d => d.business_type_id))];
+      const businessTypes = await this.prisma.businessType.findMany({
+        where: { id: { in: businessTypeIds } }
+      });
+      if (businessTypes.length !== businessTypeIds.length) {
+        throw new ValidationError("One or more invalid business types provided");
+      }
+
+      // Check for existing categories to prevent unique constraint errors
+      const existingCategories = await this.prisma.projectCategory.findMany({
+        where: {
+          OR: data.map(d => ({
+            business_type_id: d.business_type_id,
+            category_name: d.category_name
+          }))
+        }
+      });
+
+      if (existingCategories.length > 0) {
+        const duplicates = existingCategories.map(c => `${c.category_name} (BT: ${c.business_type_id})`).join(', ');
+        throw new ValidationError(`The following categories already exist: ${duplicates}`);
+      }
+
+      return this.prisma.$transaction(
+        data.map((item) =>
+          this.prisma.projectCategory.create({
+            data: {
+              business_type_id: item.business_type_id,
+              category_name: item.category_name,
+              is_active: true,
+            },
+          })
+        )
+      );
+    } else {
+      // Validate business type
+      const businessType = await this.prisma.businessType.findUnique({
+        where: { id: data.business_type_id },
+      });
+      if (!businessType) throw new ValidationError("Invalid business type");
+
+      // Check if already exists
+      const existing = await this.prisma.projectCategory.findUnique({
+        where: {
+          business_type_id_category_name: {
+            business_type_id: data.business_type_id,
+            category_name: data.category_name,
+          }
+        }
+      });
+      if (existing) throw new ValidationError("Category name already exists for this business type");
+
+      return this.prisma.projectCategory.create({
+        data: {
+          business_type_id: data.business_type_id,
+          category_name: data.category_name,
+          is_active: true,
+        },
+      });
+    }
   }
 }
