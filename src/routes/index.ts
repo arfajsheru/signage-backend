@@ -11,6 +11,7 @@ import stageFileRoutes from "../modules/stageFile/stageFile.routes.js";
 import stageApprovalRoutes from "../modules/stageApproval/stageApproval.routes.js";
 import roleRoutes from "../modules/role/role.routes.js";
 import channelPartnerRoutes from "../modules/channelPartner/channelPartner.routes.js";
+import dxfRoutes from "../modules/dxf/dxf.routes.js";
 
 /**
  * Centralized route registration for the API
@@ -38,4 +39,5 @@ export default async function appRoutes(app: FastifyInstance) {
   await app.register(stageApprovalRoutes, { prefix: "/stage-approvals" });
   await app.register(roleRoutes, { prefix: "/roles" });
   await app.register(channelPartnerRoutes, { prefix: "/channel-partners" });
+  await app.register(dxfRoutes, { prefix: "/dxf" });
 }

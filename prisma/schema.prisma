@@ -29,6 +29,7 @@ model Vendor {
   users            User[]
   projects         Project[]
   channel_partners ChannelPartner[]
+  dxf_extractions  DxfExtraction[]
 
   @@index([name])
 }
@@ -220,6 +221,8 @@ model Project {
   assignments ProjectAssignment[]
 
   stages ProjectStage[]
+
+  dxf_extractions DxfExtraction[]
 
   @@index([vendor_id])
   @@index([business_type_id])
@@ -431,3 +434,72 @@ enum ProjectSource {
   DIRECT
   CHANNEL_PARTNER
 }
+
+// ─── DXF Extraction Models ────────────────────────────────────────────────────
+
+model DxfExtraction {
+  id Int @id @default(autoincrement())
+
+  vendor_id Int
+  vendor    Vendor @relation(fields: [vendor_id], references: [id])
+
+  project_id Int?
+  project    Project? @relation(fields: [project_id], references: [id])
+
+  session_id     String  @unique
+  file_name      String
+  unit           String  @default("mm")
+
+  total_design_width  Float @default(0)
+  total_design_height Float @default(0)
+  total_area          Float @default(0)
+  total_cutting_length Float @default(0)
+  total_objects       Int   @default(0)
+  total_letters       Int   @default(0)
+  detected_layers     String[] // JSON array stored as text[]
+
+  raw_text  String[]
+  warnings  String[]
+
+  parsed_at  DateTime
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  objects DxfObject[]
+
+  @@index([vendor_id])
+  @@index([project_id])
+  @@index([session_id])
+}
+
+model DxfObject {
+  id Int @id @default(autoincrement())
+
+  extraction_id Int
+  extraction    DxfExtraction @relation(fields: [extraction_id], references: [id], onDelete: Cascade)
+
+  object          String
+  entity_type     String
+  layer           String @default("DEFAULT")
+
+  width            Float
+  height           Float
+  calculated_size  Float
+  quantity         Int   @default(1)
+
+  bbox_min_x Float @default(0)
+  bbox_min_y Float @default(0)
+  bbox_max_x Float @default(0)
+  bbox_max_y Float @default(0)
+
+  cutting_length Float?
+
+  is_text  Boolean @default(false)
+  is_group Boolean @default(false)
+
+  created_at DateTime @default(now())
+
+  @@index([extraction_id])
+  @@index([layer])
+}
+
